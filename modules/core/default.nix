@@ -44,7 +44,7 @@ in {
     viAlias = mkOption {
       description = "Enable vi alias";
       type = types.bool;
-      default = true;
+      default = false;
     };
   };
 
