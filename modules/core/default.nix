@@ -23,10 +23,11 @@ in {
       type = types.lines;
       default = "";
     };
+
     startPlugins = mkOption {
-      description = "List of plugins to startup";
+      description = "List of plugins to load on startup";
       default = [];
-      type = with types; listOf (nullOr package);
+      type = with types; listOf package;
     };
 
     optPlugins = mkOption {

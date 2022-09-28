@@ -10,7 +10,6 @@ let
   vimOptions = lib.evalModules {
     modules = [
       { imports = [ ../modules ]; }
-      config
     ];
 
     specialArgs = { inherit pkgs; };
