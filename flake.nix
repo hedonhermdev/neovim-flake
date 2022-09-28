@@ -38,10 +38,11 @@
         default = nvimPacked;
       };
       
+  }) // {
       overlays.default = final: prev: {
-        inherit neovimBuilder;
-        nvimPacked = packages.${system}.nvimPacked;
-        neovimPlugins = pkgs.neovimPlugins;
+        inherit (self.lib) neovimBuilder;
+        nvimPacked = self.packages.${final.system}.nvimPacked;
+        # neovimPlugins = pkgs.neovimPlugins;
     };
-  });
+  };
 }
