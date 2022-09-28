@@ -22,7 +22,7 @@
       apps = rec {
         nvim = {
           type = "app";
-          program = "${pkgs.neovim-unwrapped}/bin/nvim";
+          program = [(neovimBuilder (configBuilder {}))];
         };
 
         default = nvim;
@@ -33,9 +33,9 @@
       };
 
       packages = rec {
-        neovimPacked = neovimBuilder (configBuilder {});
+        nvimPacked = neovimBuilder (configBuilder {});
 
-        default = neovimPacked;
+        default = nvimPacked;
       };
       
       overlays.default = final: prev: {
