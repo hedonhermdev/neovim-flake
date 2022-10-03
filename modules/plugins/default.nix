@@ -1,8 +1,7 @@
 { config, lib, pkgs, ... }:
 {
   imports = [
-    ./core
-    ./options
-    ./plugins
+    ./treesitter.nix
+    ./onenord.nix
   ];
 }

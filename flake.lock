@@ -1,5 +1,22 @@
 {
   "nodes": {
+    "bufferline": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1650105928,
+        "narHash": "sha256-RhAaRFGDoHZAr8SLgbtLtuQ2J9z5hbvMH14FDhHOLXU=",
+        "owner": "akinsho",
+        "repo": "nvim-bufferline.lua",
+        "rev": "0a83c615a8ab49718d9b4cdc60127003307829b2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "akinsho",
+        "ref": "v1.2.0",
+        "repo": "nvim-bufferline.lua",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -54,11 +71,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1663502674,
-        "narHash": "sha256-QcYfn2awy1HgUu7D3Lp59DiV/5meke7kh/nRAVG5ERQ=",
+        "lastModified": 1664144309,
+        "narHash": "sha256-XJsgE1DOhJxqIdvwDyHN3hrx9meQ0PS5qG4c8Yf6tPg=",
         "owner": "mars-research",
         "repo": "mars-std",
-        "rev": "2d6e3a70939b203aff3924bafc09bc817aee1311",
+        "rev": "6d0ffa7223871d9341881b5767a42ea1bc42293b",
         "type": "github"
       },
       "original": {
@@ -69,16 +86,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1657494464,
-        "narHash": "sha256-k6ex0bj7o2t5uYDfScuUOk1NgUI9OhDUhEmQnktAPa4=",
+        "lastModified": 1664144125,
+        "narHash": "sha256-xP+/5HHo6fXEnM1EUhAGKin21SpCnUAmVpnCOPNS7Xc=",
         "owner": "mars-research",
         "repo": "nixpkgs",
-        "rev": "2e35d4fe621af7a97405612c4e37b54cf9965f89",
+        "rev": "cb868c77f1801babb1f40b8206a31c2ce4dcdf17",
         "type": "github"
       },
       "original": {
         "owner": "mars-research",
-        "ref": "mars-22.05",
+        "ref": "mars-22.11",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -101,11 +118,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1663905476,
-        "narHash": "sha256-0CSwRKaYravh9v6qSlBpM0gNg0UhKT2lL7Yn6Zbx7UM=",
+        "lastModified": 1664435807,
+        "narHash": "sha256-sYOAzHDloPQH48Nmp2hFf7mvVRv+AOlfQXNaCeBTykE=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "e14f9fb57315f0d4abde222364f19f88c77d2b79",
+        "rev": "8ba120420fbdd9bd35b3a5366fa0206d8c99ade3",
         "type": "github"
       },
       "original": {
@@ -115,10 +132,47 @@
         "type": "github"
       }
     },
+    "nvim-treesitter": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1664538540,
+        "narHash": "sha256-jIPisyE3RF+5KsF7KW5RAcvRAKKOkOLSOCEpvxZ1cis=",
+        "owner": "nvim-treesitter",
+        "repo": "nvim-treesitter",
+        "rev": "aebc6cf6bd4675ac86629f516d612ad5288f7868",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nvim-treesitter",
+        "repo": "nvim-treesitter",
+        "type": "github"
+      }
+    },
+    "onenord": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1664663733,
+        "narHash": "sha256-hfACdB7MptTsvgZvjUvIy+qGFZGwCZJyd3ypr7P2T30=",
+        "owner": "rmehri01",
+        "repo": "onenord.nvim",
+        "rev": "749ee2f7fdeb9a02f25195d4850d2ff16240c863",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rmehri01",
+        "repo": "onenord.nvim",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
+        "bufferline": "bufferline",
         "mars-std": "mars-std",
-        "nixpkgs": "nixpkgs_3"
+        "nixpkgs": "nixpkgs_3",
+        "nvim-treesitter": "nvim-treesitter",
+        "onenord": "onenord",
+        "telescope": "telescope",
+        "treesitter-context": "treesitter-context"
       }
     },
     "rust-overlay": {
@@ -127,16 +181,48 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1663470205,
-        "narHash": "sha256-04OnrzLLWWE73GBpIgNR2NfjPH3MiHpwN1ueMQObsAc=",
+        "lastModified": 1664074880,
+        "narHash": "sha256-/V1TX4HLADElvi3MuuIbNdvzR/HmNzbYRemKBjX/5YY=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "2ac8be332f507e521c235caa37cb0b2fc698cbd9",
+        "rev": "45140fa526b1cb85498f717e355c79a54367cb1d",
         "type": "github"
       },
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "telescope": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1664558965,
+        "narHash": "sha256-Dea+65ZTvItjr/sP7uARYdmIvl9s/Gxns1XIX7sMvTg=",
+        "owner": "nvim-telescope",
+        "repo": "telescope.nvim",
+        "rev": "76ea9a898d3307244dce3573392dcf2cc38f340f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nvim-telescope",
+        "repo": "telescope.nvim",
+        "type": "github"
+      }
+    },
+    "treesitter-context": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1664538540,
+        "narHash": "sha256-jIPisyE3RF+5KsF7KW5RAcvRAKKOkOLSOCEpvxZ1cis=",
+        "owner": "nvim-treesitter",
+        "repo": "nvim-treesitter",
+        "rev": "aebc6cf6bd4675ac86629f516d612ad5288f7868",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nvim-treesitter",
+        "repo": "nvim-treesitter",
         "type": "github"
       }
     }

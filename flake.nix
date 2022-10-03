@@ -3,7 +3,34 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+
     mars-std.url = "github:mars-research/mars-std";
+
+    nvim-treesitter = {
+      url = "github:nvim-treesitter/nvim-treesitter";
+      flake = false;
+    };
+
+    onenord = {
+      url = "github:rmehri01/onenord.nvim";
+      flake = false;
+    };
+
+    treesitter-context = {
+      url = "github:nvim-treesitter/nvim-treesitter";
+      flake = false;
+    };
+    
+    telescope = {
+      url = "github:nvim-telescope/telescope.nvim";
+      flake = false;
+    };
+
+    bufferline = {
+      url = "github:akinsho/nvim-bufferline.lua?ref=v1.2.0";
+      flake = false;
+    };
+
   };
 
   outputs = { self, nixpkgs, mars-std, ... }@inputs:
@@ -11,6 +38,11 @@
     supportedSystems = ["aarch64-darwin" "x86_64-linux"];
     plugins = [ 
       #...<fill plugins here> 
+      "nvim-treesitter"
+      "onenord"
+      "treesitter-context"
+      "telescope"
+      "bufferline"
     ];
 
   in mars-std.lib.eachSystem supportedSystems (system: let
@@ -40,9 +72,8 @@
       
   }) // {
       overlays.default = final: prev: {
-        inherit (self.lib) neovimBuilder;
+        inherit (self.lib) neovimBuilder configBuilder;
         nvimPacked = self.packages.${final.system}.nvimPacked;
-        # neovimPlugins = pkgs.neovimPlugins;
     };
   };
 }

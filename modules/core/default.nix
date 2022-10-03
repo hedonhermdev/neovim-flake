@@ -27,7 +27,7 @@ in {
     startPlugins = mkOption {
       description = "List of plugins to load on startup";
       default = [];
-      type = with types; listOf package;
+      type = with types; listOf (nullOr package);
     };
 
     optPlugins = mkOption {
