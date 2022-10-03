@@ -6,8 +6,8 @@ let
   cfg = config.vim.onenord;
 in {
 
-  vim.startPlugins = with pkgs.vimPlugins; [
-    onenord-nvim
+  vim.startPlugins = with pkgs.neovimPlugins; [
+    onenord
   ];
 
   vim.luaConfigRC = ''

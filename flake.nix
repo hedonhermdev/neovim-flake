@@ -6,7 +6,7 @@
 
     mars-std.url = "github:mars-research/mars-std";
 
-    nvim-treesitter = {
+    treesitter = {
       url = "github:nvim-treesitter/nvim-treesitter";
       flake = false;
     };
@@ -17,7 +17,7 @@
     };
 
     treesitter-context = {
-      url = "github:nvim-treesitter/nvim-treesitter";
+      url = "github:lewis6991/nvim-treesitter-context";
       flake = false;
     };
     
@@ -27,7 +27,12 @@
     };
 
     bufferline = {
-      url = "github:akinsho/nvim-bufferline.lua?ref=v1.2.0";
+      url = "github:akinsho/nvim-bufferline.lua";
+      flake = false;
+    };
+
+    indent-blankline = {
+      url = "github:lukas-reineke/indent-blankline.nvim";
       flake = false;
     };
 
@@ -38,18 +43,31 @@
     supportedSystems = ["aarch64-darwin" "x86_64-linux"];
     plugins = [ 
       #...<fill plugins here> 
-      "nvim-treesitter"
+      "treesitter"
       "onenord"
       "treesitter-context"
       "telescope"
       "bufferline"
+      "indent-blankline"
     ];
 
-  in mars-std.lib.eachSystem supportedSystems (system: let
-    pkgs = nixpkgs.legacyPackages.${system};
-    lib = import ./lib {inherit pkgs inputs plugins;};
+  in mars-std.lib.eachSystem supportedSystems (system:
+    let
+      lib = import ./lib {inherit pkgs inputs plugins;};
 
-    inherit (lib) buildPluginOverlay neovimBuilder configBuilder;
+      inherit (lib) buildPluginOverlay neovimBuilder configBuilder;
+      
+      pkgs = import nixpkgs {
+        inherit system;
+
+        config = { allowUnfree = true; };
+
+        overlays = [
+            buildPluginOverlay
+        ];
+      };
+
+
     in rec {
       apps = rec {
         nvim = {

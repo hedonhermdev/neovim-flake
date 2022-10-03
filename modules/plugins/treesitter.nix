@@ -6,6 +6,9 @@ with builtins;
 let
   cfg = config.vim.treesitter;
 in {
+  vim.startPlugins = with pkgs.neovimPlugins; [
+    treesitter
+  ];
   vim.luaConfigRC = ''
     require'nvim-treesitter.configs'.setup {
       highlight = {

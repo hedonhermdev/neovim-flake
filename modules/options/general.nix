@@ -25,8 +25,6 @@ in {
 
     set t_Co=256 " Use all 256 colors
 
-    set lazyredraw " Redraw only when needed
-
     set cursorline " Highlight the current line
 
     set noshowmode " don't need to see -- INSERT --
