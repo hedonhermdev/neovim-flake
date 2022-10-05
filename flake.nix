@@ -2,7 +2,7 @@
   description = "hedonhermdev's nvim configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     mars-std.url = "github:mars-research/mars-std";
 
@@ -11,8 +11,8 @@
       flake = false;
     };
 
-    onenord = {
-      url = "github:rmehri01/onenord.nvim";
+    catppuccin = {
+      url = "github:catppuccin/nvim";
       flake = false;
     };
 
@@ -35,7 +35,11 @@
       url = "github:lukas-reineke/indent-blankline.nvim";
       flake = false;
     };
-
+    
+    plenary = {
+      url = "github:nvim-lua/plenary.nvim";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, mars-std, ... }@inputs:
@@ -44,7 +48,7 @@
     plugins = [ 
       #...<fill plugins here> 
       "treesitter"
-      "onenord"
+      "catppuccin"
       "treesitter-context"
       "telescope"
       "bufferline"

@@ -16,6 +16,22 @@
         "type": "github"
       }
     },
+    "catppuccin": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1664935658,
+        "narHash": "sha256-NK+E23cW44QzClTIx5R1NlecJyii4gf5LVaQ5lSpJO4=",
+        "owner": "catppuccin",
+        "repo": "nvim",
+        "rev": "4b19d944c1562cf9ffeaeb098502e99734973db9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "catppuccin",
+        "repo": "nvim",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -133,43 +149,44 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1664787379,
-        "narHash": "sha256-gfKKtflfRcyxUPeTQ1JwyF1vXdyVvjO6Zy7GVyDdPro=",
+        "lastModified": 1664780719,
+        "narHash": "sha256-Oxe6la5dSqRfJogjtY4sRzJjDDqvroJIVkcGEOT87MA=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "2c2c0afe1b5b31ed6a559ec4687b58608fa9069d",
+        "rev": "fd54651f5ffb4a36e8463e0c327a78442b26cbe7",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "nixpkgs-unstable",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
     },
-    "onenord": {
+    "plenary": {
       "flake": false,
       "locked": {
-        "lastModified": 1664663733,
-        "narHash": "sha256-hfACdB7MptTsvgZvjUvIy+qGFZGwCZJyd3ypr7P2T30=",
-        "owner": "rmehri01",
-        "repo": "onenord.nvim",
-        "rev": "749ee2f7fdeb9a02f25195d4850d2ff16240c863",
+        "lastModified": 1664607953,
+        "narHash": "sha256-lIdBrVpi+vUudeotjFAuw4C0VT8TPoFE9cVVAQEsAYU=",
+        "owner": "nvim-lua",
+        "repo": "plenary.nvim",
+        "rev": "4b7e52044bbb84242158d977a50c4cbcd85070c7",
         "type": "github"
       },
       "original": {
-        "owner": "rmehri01",
-        "repo": "onenord.nvim",
+        "owner": "nvim-lua",
+        "repo": "plenary.nvim",
         "type": "github"
       }
     },
     "root": {
       "inputs": {
         "bufferline": "bufferline",
+        "catppuccin": "catppuccin",
         "indent-blankline": "indent-blankline",
         "mars-std": "mars-std",
         "nixpkgs": "nixpkgs_3",
-        "onenord": "onenord",
+        "plenary": "plenary",
         "telescope": "telescope",
         "treesitter": "treesitter",
         "treesitter-context": "treesitter-context"
