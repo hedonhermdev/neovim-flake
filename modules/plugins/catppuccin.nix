@@ -14,6 +14,6 @@ in {
     vim.g.catppuccin_flavour = "macchiato"
     require('catppuccin').setup()
 
-    vim.cmd = [[ colorscheme catppuccin ]]
+    vim.cmd [[ colorscheme catppuccin ]]
   '';
 }

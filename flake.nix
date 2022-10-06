@@ -40,6 +40,11 @@
       url = "github:nvim-lua/plenary.nvim";
       flake = false;
     };
+
+    devicons = {
+      url = "github:kyazdani42/nvim-web-devicons";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, mars-std, ... }@inputs:
@@ -53,6 +58,8 @@
       "telescope"
       "bufferline"
       "indent-blankline"
+      "plenary"
+      "devicons"
     ];
 
   in mars-std.lib.eachSystem supportedSystems (system:
@@ -87,6 +94,7 @@
       };
 
       packages = rec {
+        neovimPlugins = pkgs.neovimPlugins;
         nvimPacked = neovimBuilder (configBuilder {});
 
         default = nvimPacked;

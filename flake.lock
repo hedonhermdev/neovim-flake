@@ -32,6 +32,22 @@
         "type": "github"
       }
     },
+    "devicons": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1664809554,
+        "narHash": "sha256-ykzQV09P8E7ZkWmaVoj+Ah68ZfLrt7irAAfnkeFXhqQ=",
+        "owner": "kyazdani42",
+        "repo": "nvim-web-devicons",
+        "rev": "a8cf88cbdb5c58e2b658e179c4b2aa997479b3da",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kyazdani42",
+        "repo": "nvim-web-devicons",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -183,6 +199,7 @@
       "inputs": {
         "bufferline": "bufferline",
         "catppuccin": "catppuccin",
+        "devicons": "devicons",
         "indent-blankline": "indent-blankline",
         "mars-std": "mars-std",
         "nixpkgs": "nixpkgs_3",

@@ -7,6 +7,7 @@ let
   cfg = config.vim.treesitter;
 in {
   vim.startPlugins = with pkgs.neovimPlugins; [
+    devicons
     bufferline
   ];
   vim.luaConfigRC = ''

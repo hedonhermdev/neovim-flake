@@ -4,5 +4,6 @@
     ./core
     ./options
     ./plugins
+    ./keybindings
   ];
 }
