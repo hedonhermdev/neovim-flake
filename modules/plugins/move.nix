@@ -6,6 +6,4 @@ with builtins;
   vim.startPlugins = with pkgs.neovimPlugins; [
     move
   ];
-
-  vim.
 }

@@ -6,6 +6,9 @@
     plenary
     vim-nix
     move
+    fugitive
+    surround
+    commentary
   ];
   imports = [
     ./treesitter.nix
@@ -17,5 +20,6 @@
     ./nvim-tree.nix
     ./git.nix
     ./numb.nix
+    # ./noice.nix
   ];
 }

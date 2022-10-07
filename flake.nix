@@ -60,7 +60,47 @@
       url = "github:matze/vim-move";
       flake = false;
     };
-    
+
+    repeat = {
+      url = "github:tpope/vim-repeat";
+      flake = false;
+    };
+
+    fugitive = {
+      url = "github:tpope/vim-fugitive";
+      flake = false;
+    };
+
+    lazygit = {
+      url = "github:kdheepak/lazygit.nvim";
+      flake = false;
+    };
+
+    surround = {
+      url = "github:tpope/vim-surround";
+      flake = false;
+    };
+
+    commentary = {
+      url = "github:tpope/vim-commentary";
+      flake = false;
+    };
+
+    noice = {
+      url = "github:folke/noice.nvim";
+      flake = false;
+    };
+
+    notice = {
+      url = "github:MunifTanjim/nui.nvim";
+      flake = false;
+    };
+
+    nui = {
+      url = "github:rcarriga/nvim-notify";
+      flake = false;
+    };
+
     plenary = {
       url = "github:nvim-lua/plenary.nvim";
       flake = false;
@@ -90,6 +130,13 @@
       "numb"
       "move"
       "gitsigns"
+      "lazygit"
+      "fugitive"
+      "surround"
+      "commentary"
+      "nui"
+      "notice"
+      "noice"
     ];
 
   in mars-std.lib.eachSystem supportedSystems (system:
@@ -120,7 +167,10 @@
       };
 
       devShell = pkgs.mkShell {
-        buildInputs = [(neovimBuilder (configBuilder {}))];
+        buildInputs = [
+          (neovimBuilder (configBuilder {}))
+          pkgs.lazygit
+        ];
       };
 
       packages = rec {
