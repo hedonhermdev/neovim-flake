@@ -26,13 +26,38 @@
       flake = false;
     };
 
-    bufferline = {
-      url = "github:akinsho/nvim-bufferline.lua";
+    cokeline = {
+      url = "github:noib3/nvim-cokeline";
+      flake = false;
+    };
+
+    nvim-tree = {
+      url = "github:kyazdani42/nvim-tree.lua";
       flake = false;
     };
 
     indent-blankline = {
       url = "github:lukas-reineke/indent-blankline.nvim";
+      flake = false;
+    };
+
+    vim-nix = {
+      url = "github:LnL7/vim-nix";
+      flake = false;
+    };
+
+    gitsigns = {
+      url = "github:lewis6991/gitsigns.nvim";
+      flake = false;
+    };
+
+    numb = {
+      url = "github:nacro90/numb.nvim";
+      flake = false;
+    };
+
+    move = {
+      url = "github:matze/vim-move";
       flake = false;
     };
     
@@ -56,10 +81,15 @@
       "catppuccin"
       "treesitter-context"
       "telescope"
-      "bufferline"
+      "cokeline"
+      "nvim-tree"
       "indent-blankline"
       "plenary"
       "devicons"
+      "vim-nix"
+      "numb"
+      "move"
+      "gitsigns"
     ];
 
   in mars-std.lib.eachSystem supportedSystems (system:
@@ -94,14 +124,14 @@
       };
 
       packages = rec {
+        inherit neovimBuilder configBuilder;
         neovimPlugins = pkgs.neovimPlugins;
         nvimPacked = neovimBuilder (configBuilder {});
 
         default = nvimPacked;
       };
       
-  }) // {
-      overlays.default = final: prev: {
+  }) // { overlays.default = final: prev: {
         inherit (self.lib) neovimBuilder configBuilder;
         nvimPacked = self.packages.${final.system}.nvimPacked;
     };
