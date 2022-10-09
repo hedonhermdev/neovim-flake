@@ -21,5 +21,6 @@
     ./git.nix
     ./numb.nix
     # ./noice.nix
+    ./lsp.nix
   ];
 }

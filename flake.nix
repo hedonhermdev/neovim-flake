@@ -20,7 +20,7 @@
       url = "github:lewis6991/nvim-treesitter-context";
       flake = false;
     };
-    
+
     telescope = {
       url = "github:nvim-telescope/telescope.nvim";
       flake = false;
@@ -101,6 +101,76 @@
       flake = false;
     };
 
+    lspconfig = {
+      url = "github:neovim/nvim-lspconfig";
+      flake = false;
+    };
+
+    lspkind = {
+      url = "github:onsails/lspkind-nvim";
+      flake = false;
+    };
+
+    lspsaga = {
+      url = "github:glepnir/lspsaga.nvim";
+      flake = false;
+    };
+
+    lsp_signature = {
+      url = "github:ray-x/lsp_signature.nvim";
+      flake = false;
+    };
+
+    code-action-menu = {
+      url = "github:weilbith/nvim-code-action-menu";
+      flake = false;
+    };
+
+    cmp = {
+      url = "github:hrsh7th/nvim-cmp";
+      flake = false;
+    };
+
+    vsnip = {
+      url = "github:hrsh7th/vim-vsnip";
+      flake = false;
+    };
+
+    cmp-vsnip = {
+      url = "github:hrsh7th/cmp-vsnip";
+      flake = false;
+    };
+
+    cmp-buffer = {
+      url = "github:hrsh7th/cmp-buffer";
+      flake = false;
+    };
+
+    cmp-calc = {
+      url = "github:hrsh7th/cmp-calc";
+      flake = false;
+    };
+
+    cmp-nvim-lsp = {
+      url = "github:hrsh7th/cmp-nvim-lsp";
+      flake = false;
+    };
+
+    cmp-path = {
+      url = "github:hrsh7th/cmp-path";
+      flake = false;
+    };
+
+    cmp-treesitter = {
+      url = "github:ray-x/cmp-treesitter";
+      flake = false;
+    };
+
+    rust-tools = {
+      url = "github:simrat39/rust-tools.nvim";
+      flake = false;
+    };
+
     plenary = {
       url = "github:nvim-lua/plenary.nvim";
       flake = false;
@@ -137,53 +207,67 @@
       "nui"
       "notice"
       "noice"
+      "lspconfig"
+      "lspkind"
+      "lspsaga"
+      "lsp_signature"
+      "code-action-menu"
+      "cmp"
+      "vsnip"
+      "cmp-vsnip"
+      "cmp-buffer"
+      "cmp-calc"
+      "cmp-nvim-lsp"
+      "cmp-path"
+      "cmp-treesitter"
+      "rust-tools"
     ];
 
   in mars-std.lib.eachSystem supportedSystems (system:
-    let
-      lib = import ./lib {inherit pkgs inputs plugins;};
+  let
+    lib = import ./lib {inherit pkgs inputs plugins;};
 
-      inherit (lib) buildPluginOverlay neovimBuilder configBuilder;
-      
-      pkgs = import nixpkgs {
-        inherit system;
+    inherit (lib) buildPluginOverlay neovimBuilder configBuilder;
 
-        config = { allowUnfree = true; };
+    pkgs = import nixpkgs {
+      inherit system;
 
-        overlays = [
-            buildPluginOverlay
-        ];
-      };
+      config = { allowUnfree = true; };
 
-
-    in rec {
-      apps = rec {
-        nvim = {
-          type = "app";
-          program = [(neovimBuilder (configBuilder {}))];
-        };
-
-        default = nvim;
-      };
-
-      devShell = pkgs.mkShell {
-        buildInputs = [
-          (neovimBuilder (configBuilder {}))
-          pkgs.lazygit
-        ];
-      };
-
-      packages = rec {
-        inherit neovimBuilder configBuilder;
-        neovimPlugins = pkgs.neovimPlugins;
-        nvimPacked = neovimBuilder (configBuilder {});
-
-        default = nvimPacked;
-      };
-      
-  }) // { overlays.default = final: prev: {
-        inherit (self.lib) neovimBuilder configBuilder;
-        nvimPacked = self.packages.${final.system}.nvimPacked;
+      overlays = [
+        buildPluginOverlay
+      ];
     };
+
+
+  in rec {
+    apps = rec {
+      nvim = {
+        type = "app";
+        program = [(neovimBuilder (configBuilder {}))];
+      };
+
+      default = nvim;
+    };
+
+    devShell = pkgs.mkShell {
+      buildInputs = [
+        (neovimBuilder (configBuilder {}))
+        pkgs.lazygit
+      ];
+    };
+
+    packages = rec {
+      inherit neovimBuilder configBuilder;
+      neovimPlugins = pkgs.neovimPlugins;
+      nvimPacked = neovimBuilder (configBuilder {});
+
+      default = nvimPacked;
+    };
+
+  }) // { overlays.default = final: prev: {
+    inherit (self.lib) neovimBuilder configBuilder;
+    nvimPacked = self.packages.${final.system}.nvimPacked;
   };
-}
+};
+  }
