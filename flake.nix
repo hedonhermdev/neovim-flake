@@ -184,7 +184,7 @@
 
   outputs = { self, nixpkgs, mars-std, ... }@inputs:
   let
-    supportedSystems = ["aarch64-darwin" "x86_64-linux"];
+    supportedSystems = ["aarch64-darwin" "aarch64-linux" "x86_64-linux"];
     plugins = [ 
       #...<fill plugins here> 
       "treesitter"
