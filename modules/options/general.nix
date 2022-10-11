@@ -10,8 +10,6 @@ in {
 
     set mouse=a " Enable mouse support
 
-    set title " Set title of terminal window to the current file name
-
     syntax enable " Enable syntax highlighting
 
     set wrap " Wrap long lines

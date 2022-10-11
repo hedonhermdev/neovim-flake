@@ -1,0 +1,29 @@
+#! /nix/store/addlxsbl7ycab3zbkb0wq6a74487pncm-bash-5.1-p16/bin/bash -e
+export NVIM_SYSTEM_RPLUGIN_MANIFEST='/nix/store/g1dxwq0vy8ylh7nsp2s38xd0ph38gcp2-neovim-0.8.0/rplugin.vim'
+export GEM_HOME='/nix/store/0bwxkq3y975z34qfgj8chx63darsh5hl-neovim-ruby-env/lib/ruby/gems/2.7.0'
+PATH=${PATH:+':'$PATH':'}
+if [[ $PATH != *':''/nix/store/0bwxkq3y975z34qfgj8chx63darsh5hl-neovim-ruby-env/bin'':'* ]]; then
+    PATH=$PATH'/nix/store/0bwxkq3y975z34qfgj8chx63darsh5hl-neovim-ruby-env/bin'
+fi
+PATH=${PATH#':'}
+PATH=${PATH%':'}
+export PATH
+LUA_PATH=${LUA_PATH:+';'$LUA_PATH';'}
+LUA_PATH=${LUA_PATH/';''/nix/store/3i68i94z8d1xpjbiya80i6ibzydjjc9p-luajit-2.1.0-2022-04-05-env/share/lua/5.1/?/init.lua'';'/';'}
+LUA_PATH='/nix/store/3i68i94z8d1xpjbiya80i6ibzydjjc9p-luajit-2.1.0-2022-04-05-env/share/lua/5.1/?/init.lua'$LUA_PATH
+LUA_PATH=${LUA_PATH#';'}
+LUA_PATH=${LUA_PATH%';'}
+export LUA_PATH
+LUA_PATH=${LUA_PATH:+';'$LUA_PATH';'}
+LUA_PATH=${LUA_PATH/';''/nix/store/3i68i94z8d1xpjbiya80i6ibzydjjc9p-luajit-2.1.0-2022-04-05-env/share/lua/5.1/?.lua'';'/';'}
+LUA_PATH='/nix/store/3i68i94z8d1xpjbiya80i6ibzydjjc9p-luajit-2.1.0-2022-04-05-env/share/lua/5.1/?.lua'$LUA_PATH
+LUA_PATH=${LUA_PATH#';'}
+LUA_PATH=${LUA_PATH%';'}
+export LUA_PATH
+LUA_CPATH=${LUA_CPATH:+';'$LUA_CPATH';'}
+LUA_CPATH=${LUA_CPATH/';''/nix/store/3i68i94z8d1xpjbiya80i6ibzydjjc9p-luajit-2.1.0-2022-04-05-env/lib/lua/5.1/?.so'';'/';'}
+LUA_CPATH='/nix/store/3i68i94z8d1xpjbiya80i6ibzydjjc9p-luajit-2.1.0-2022-04-05-env/lib/lua/5.1/?.so'$LUA_CPATH
+LUA_CPATH=${LUA_CPATH#';'}
+LUA_CPATH=${LUA_CPATH%';'}
+export LUA_CPATH
+exec -a "$0" "/nix/store/9m76ah7362p42qh5jvlvdmmyqb1sdzj4-neovim-unwrapped-0.8.0/bin/nvim"  -u /home/tirth/neovim-flake/temp-init.vim '--cmd' 'let g:loaded_node_provider=0 | let g:loaded_python_provider=0 | let g:python3_host_prog='\''/nix/store/g1dxwq0vy8ylh7nsp2s38xd0ph38gcp2-neovim-0.8.0/bin/nvim-python3'\'' | let g:ruby_host_prog='\''/nix/store/g1dxwq0vy8ylh7nsp2s38xd0ph38gcp2-neovim-0.8.0/bin/nvim-ruby'\''' '--cmd' 'set packpath^=/nix/store/01gxrd2ib2zqa13pyiwimhy0mdwrzg1f-vim-pack-dir' '--cmd' 'set rtp^=/nix/store/01gxrd2ib2zqa13pyiwimhy0mdwrzg1f-vim-pack-dir' "$@" 

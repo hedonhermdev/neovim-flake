@@ -22,5 +22,6 @@
     ./numb.nix
     # ./noice.nix
     ./lsp.nix
+    ./alpha.nix
   ];
 }

@@ -1,5 +1,37 @@
 {
   "nodes": {
+    "alpha": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1662693863,
+        "narHash": "sha256-tKXSFZusajLLsbQj6VKZG1TJB+i5i1H5e5Q5tbe+ojM=",
+        "owner": "goolord",
+        "repo": "alpha-nvim",
+        "rev": "0bb6fc0646bcd1cdb4639737a1cee8d6e08bcc31",
+        "type": "github"
+      },
+      "original": {
+        "owner": "goolord",
+        "repo": "alpha-nvim",
+        "type": "github"
+      }
+    },
+    "autopairs": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1664657458,
+        "narHash": "sha256-cv3y0UyHzCvcs6XZGXuXtm0EvINniZt7ZAqo08pRUyU=",
+        "owner": "windwp",
+        "repo": "nvim-autopairs",
+        "rev": "4fc96c8f3df89b6d23e5092d31c866c53a346347",
+        "type": "github"
+      },
+      "original": {
+        "owner": "windwp",
+        "repo": "nvim-autopairs",
+        "type": "github"
+      }
+    },
     "catppuccin": {
       "flake": false,
       "locked": {
@@ -565,6 +597,8 @@
     },
     "root": {
       "inputs": {
+        "alpha": "alpha",
+        "autopairs": "autopairs",
         "catppuccin": "catppuccin",
         "cmp": "cmp",
         "cmp-buffer": "cmp-buffer",
@@ -597,6 +631,7 @@
         "repeat": "repeat",
         "rust-tools": "rust-tools",
         "surround": "surround",
+        "symbols-outline": "symbols-outline",
         "telescope": "telescope",
         "treesitter": "treesitter",
         "treesitter-context": "treesitter-context",
@@ -652,6 +687,22 @@
       "original": {
         "owner": "tpope",
         "repo": "vim-surround",
+        "type": "github"
+      }
+    },
+    "symbols-outline": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1661735056,
+        "narHash": "sha256-R0xmXr0lCsRksoSQXCjLJ/pGLRMMK7sUuUdaUv7BknQ=",
+        "owner": "simrat39",
+        "repo": "symbols-outline.nvim",
+        "rev": "6a3ed24c5631da7a5d418bced57c16b32af7747c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "simrat39",
+        "repo": "symbols-outline.nvim",
         "type": "github"
       }
     },

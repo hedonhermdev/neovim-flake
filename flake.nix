@@ -171,6 +171,21 @@
       flake = false;
     };
 
+    autopairs = {
+      url = "github:windwp/nvim-autopairs";
+      flake = false;
+    };
+
+    symbols-outline = {
+      url = "github:simrat39/symbols-outline.nvim";
+      flake = false;
+    };
+
+    alpha = {
+      url = "github:goolord/alpha-nvim";
+      flake = false;
+    };
+
     plenary = {
       url = "github:nvim-lua/plenary.nvim";
       flake = false;
@@ -221,6 +236,9 @@
       "cmp-path"
       "cmp-treesitter"
       "rust-tools"
+      "symbols-outline"
+      "autopairs"
+      "alpha"
     ];
 
   in mars-std.lib.eachSystem supportedSystems (system:
