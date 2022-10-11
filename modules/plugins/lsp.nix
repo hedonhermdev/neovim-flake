@@ -116,6 +116,10 @@ with builtins;
 
     }
 
+    lspconfig.texlab.setup{
+      capabilities = capabilities
+    }
+
     local rust_tools = require('rust-tools')
     rust_tools.setup({
       server = {

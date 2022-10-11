@@ -186,6 +186,16 @@
       flake = false;
     };
 
+    vimtex = {
+      url = "github:lervag/vimtex";
+      flake = false;
+    };
+
+    galaxyline = {
+      url = "github:glepnir/galaxyline.nvim";
+      flake = false;
+    };
+
     plenary = {
       url = "github:nvim-lua/plenary.nvim";
       flake = false;
@@ -200,45 +210,47 @@
   outputs = { self, nixpkgs, mars-std, ... }@inputs:
   let
     supportedSystems = ["aarch64-darwin" "aarch64-linux" "x86_64-linux"];
-    plugins = [ 
+    plugins = [
       #...<fill plugins here> 
-      "treesitter"
+      "alpha"
+      "autopairs"
       "catppuccin"
-      "treesitter-context"
-      "telescope"
-      "cokeline"
-      "nvim-tree"
-      "indent-blankline"
-      "plenary"
-      "devicons"
-      "vim-nix"
-      "numb"
-      "move"
-      "gitsigns"
-      "lazygit"
-      "fugitive"
-      "surround"
-      "commentary"
-      "nui"
-      "notice"
-      "noice"
-      "lspconfig"
-      "lspkind"
-      "lspsaga"
-      "lsp_signature"
-      "code-action-menu"
       "cmp"
-      "vsnip"
-      "cmp-vsnip"
       "cmp-buffer"
       "cmp-calc"
       "cmp-nvim-lsp"
       "cmp-path"
       "cmp-treesitter"
+      "cmp-vsnip"
+      "code-action-menu"
+      "cokeline"
+      "commentary"
+      "devicons"
+      "fugitive"
+      "galaxyline"
+      "gitsigns"
+      "indent-blankline"
+      "lazygit"
+      "lsp_signature"
+      "lspconfig"
+      "lspkind"
+      "lspsaga"
+      "move"
+      "noice"
+      "notice"
+      "nui"
+      "numb"
+      "nvim-tree"
+      "plenary"
       "rust-tools"
+      "surround"
       "symbols-outline"
-      "autopairs"
-      "alpha"
+      "telescope"
+      "treesitter"
+      "treesitter-context"
+      "vim-nix"
+      "vimtex"
+      "vsnip"
     ];
 
   in mars-std.lib.eachSystem supportedSystems (system:

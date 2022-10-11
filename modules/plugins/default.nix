@@ -23,5 +23,6 @@
     # ./noice.nix
     ./lsp.nix
     ./alpha.nix
+    ./galaxyline.nix
   ];
 }

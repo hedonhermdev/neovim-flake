@@ -286,6 +286,22 @@
         "type": "github"
       }
     },
+    "galaxyline": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1654393683,
+        "narHash": "sha256-798Kci37e4HNeJA5+265pnA3uBpa2bx077a+aE+Gk8Q=",
+        "owner": "glepnir",
+        "repo": "galaxyline.nvim",
+        "rev": "eb81be07bf690c5ef7474ace72920b32ad089585",
+        "type": "github"
+      },
+      "original": {
+        "owner": "glepnir",
+        "repo": "galaxyline.nvim",
+        "type": "github"
+      }
+    },
     "gitsigns": {
       "flake": false,
       "locked": {
@@ -612,6 +628,7 @@
         "commentary": "commentary",
         "devicons": "devicons",
         "fugitive": "fugitive",
+        "galaxyline": "galaxyline",
         "gitsigns": "gitsigns",
         "indent-blankline": "indent-blankline",
         "lazygit": "lazygit",
@@ -636,6 +653,7 @@
         "treesitter": "treesitter",
         "treesitter-context": "treesitter-context",
         "vim-nix": "vim-nix",
+        "vimtex": "vimtex",
         "vsnip": "vsnip"
       }
     },
@@ -767,6 +785,22 @@
       "original": {
         "owner": "LnL7",
         "repo": "vim-nix",
+        "type": "github"
+      }
+    },
+    "vimtex": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1665470060,
+        "narHash": "sha256-1E7bp3paAuNqrn+10k0WBpJBMRimLbGLDJoTsR/Ncbk=",
+        "owner": "lervag",
+        "repo": "vimtex",
+        "rev": "70957765673a02bca782de779f5c79ce45e6645d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lervag",
+        "repo": "vimtex",
         "type": "github"
       }
     },
