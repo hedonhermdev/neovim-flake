@@ -121,7 +121,11 @@ with builtins;
     }
 
     lspconfig.clangd.setup {
-      capabilities = capabilities;
+      capabilities = capabilities
+    }
+
+    lspconfig.bashls.setup{
+      capabilities = capabilities
     }
 
     local rust_tools = require('rust-tools')
