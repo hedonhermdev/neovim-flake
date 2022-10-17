@@ -120,6 +120,10 @@ with builtins;
       capabilities = capabilities
     }
 
+    lspconfig.clangd.setup {
+      capabilities = capabilities;
+    }
+
     local rust_tools = require('rust-tools')
     rust_tools.setup({
       server = {
