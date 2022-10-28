@@ -201,6 +201,11 @@
       flake = false;
     };
 
+    glow = {
+      url = "github:ellisonleao/glow.nvim";
+      flake = false;
+    };
+
     devicons = {
       url = "github:kyazdani42/nvim-web-devicons";
       flake = false;
@@ -208,96 +213,100 @@
   };
 
   outputs = { self, nixpkgs, mars-std, ... }@inputs:
-  let
-    supportedSystems = ["aarch64-darwin" "aarch64-linux" "x86_64-linux"];
-    plugins = [
-      #...<fill plugins here> 
-      "alpha"
-      "autopairs"
-      "catppuccin"
-      "cmp"
-      "cmp-buffer"
-      "cmp-calc"
-      "cmp-nvim-lsp"
-      "cmp-path"
-      "cmp-treesitter"
-      "cmp-vsnip"
-      "code-action-menu"
-      "cokeline"
-      "commentary"
-      "devicons"
-      "fugitive"
-      "galaxyline"
-      "gitsigns"
-      "indent-blankline"
-      "lazygit"
-      "lsp_signature"
-      "lspconfig"
-      "lspkind"
-      "lspsaga"
-      "move"
-      "noice"
-      "notice"
-      "nui"
-      "numb"
-      "nvim-tree"
-      "plenary"
-      "rust-tools"
-      "surround"
-      "symbols-outline"
-      "telescope"
-      "treesitter"
-      "treesitter-context"
-      "vim-nix"
-      "vimtex"
-      "vsnip"
-    ];
-
-  in mars-std.lib.eachSystem supportedSystems (system:
-  let
-    lib = import ./lib {inherit pkgs inputs plugins;};
-
-    inherit (lib) buildPluginOverlay neovimBuilder configBuilder;
-
-    pkgs = import nixpkgs {
-      inherit system;
-
-      config = { allowUnfree = true; };
-
-      overlays = [
-        buildPluginOverlay
+    let
+      supportedSystems = [ "aarch64-darwin" "aarch64-linux" "x86_64-linux" ];
+      plugins = [
+        "alpha"
+        "autopairs"
+        "catppuccin"
+        "cmp"
+        "cmp-buffer"
+        "cmp-calc"
+        "cmp-nvim-lsp"
+        "cmp-path"
+        "cmp-treesitter"
+        "cmp-vsnip"
+        "code-action-menu"
+        "cokeline"
+        "commentary"
+        "devicons"
+        "fugitive"
+        "galaxyline"
+        "gitsigns"
+        "glow"
+        "indent-blankline"
+        "lazygit"
+        "lsp_signature"
+        "lspconfig"
+        "lspkind"
+        "lspsaga"
+        "move"
+        "noice"
+        "notice"
+        "nui"
+        "numb"
+        "nvim-tree"
+        "plenary"
+        "rust-tools"
+        "surround"
+        "symbols-outline"
+        "telescope"
+        "treesitter"
+        "treesitter-context"
+        "vim-nix"
+        "vimtex"
+        "vsnip"
       ];
-    };
+
+    in
+    mars-std.lib.eachSystem supportedSystems
+      (system:
+        let
+          lib = import ./lib { inherit pkgs inputs plugins; };
+
+          inherit (lib) buildPluginOverlay neovimBuilder configBuilder;
+
+          pkgs = import nixpkgs {
+            inherit system;
+
+            config = { allowUnfree = true; };
+
+            overlays = [
+              buildPluginOverlay
+            ];
+          };
 
 
-  in rec {
-    apps = rec {
-      nvim = {
-        type = "app";
-        program = [(neovimBuilder (configBuilder {}))];
+        in
+        rec {
+          apps = rec {
+            nvim = {
+              type = "app";
+              program = [ (neovimBuilder (configBuilder { })) ];
+            };
+
+            default = nvim;
+          };
+
+          devShell = pkgs.mkShell {
+            buildInputs = [
+              (neovimBuilder (configBuilder { }))
+              pkgs.lazygit
+            ];
+          };
+
+          packages = rec {
+            inherit neovimBuilder configBuilder;
+            neovimPlugins = pkgs.neovimPlugins;
+            nvimPacked = neovimBuilder (configBuilder { });
+
+            default = nvimPacked;
+          };
+
+        }) // {
+      overlays.default = final: prev: {
+        inherit (self.lib) neovimBuilder configBuilder;
+        nvimPacked = self.packages.${final.system}.nvimPacked;
       };
-
-      default = nvim;
     };
-
-    devShell = pkgs.mkShell {
-      buildInputs = [
-        (neovimBuilder (configBuilder {}))
-        pkgs.lazygit
-      ];
-    };
-
-    packages = rec {
-      inherit neovimBuilder configBuilder;
-      neovimPlugins = pkgs.neovimPlugins;
-      nvimPacked = neovimBuilder (configBuilder {});
-
-      default = nvimPacked;
-    };
-
-  }) // { overlays.default = final: prev: {
-    inherit (self.lib) neovimBuilder configBuilder;
-    nvimPacked = self.packages.${final.system}.nvimPacked;
-  };
-};
-  }
+}

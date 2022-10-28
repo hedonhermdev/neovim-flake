@@ -5,5 +5,6 @@
     ./options
     ./plugins
     ./keybindings
+    ./commands
   ];
 }

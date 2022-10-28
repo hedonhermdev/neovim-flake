@@ -24,5 +24,6 @@
     ./lsp.nix
     ./alpha.nix
     ./galaxyline.nix
+    ./glow.nix
   ];
 }
