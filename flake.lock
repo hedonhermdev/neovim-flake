@@ -224,6 +224,22 @@
         "type": "github"
       }
     },
+    "exrc": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1640233456,
+        "narHash": "sha256-p6XUNWyQ1pgaJ22OOw701acmJHT0BwHpW99pOB67TUk=",
+        "owner": "ii14",
+        "repo": "exrc.vim",
+        "rev": "ae734ae2c087b370d869e41a2706a128d8f3fc37",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ii14",
+        "repo": "exrc.vim",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -643,6 +659,7 @@
         "cokeline": "cokeline",
         "commentary": "commentary",
         "devicons": "devicons",
+        "exrc": "exrc",
         "fugitive": "fugitive",
         "galaxyline": "galaxyline",
         "gitsigns": "gitsigns",

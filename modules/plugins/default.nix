@@ -9,6 +9,7 @@
     fugitive
     surround
     commentary
+    exrc
   ];
   imports = [
     ./treesitter.nix

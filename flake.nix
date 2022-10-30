@@ -210,6 +210,11 @@
       url = "github:kyazdani42/nvim-web-devicons";
       flake = false;
     };
+
+    exrc = {
+      url = "github:ii14/exrc.vim";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, mars-std, ... }@inputs:
@@ -230,6 +235,7 @@
         "cokeline"
         "commentary"
         "devicons"
+        "exrc"
         "fugitive"
         "galaxyline"
         "gitsigns"
