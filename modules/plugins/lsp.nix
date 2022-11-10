@@ -152,7 +152,8 @@ with builtins;
   vim.nmap = {
     "<silent><leader>ca" = "<cmd>Lspsaga code_action<CR>";
     "<silent>gd" = "<cmd>Lspsaga peek_definition<CR>";
-    "<silent>gD" = "vim.lsp.buf.definition()";
+    "<silent>gD" = "<cmd>lua vim.lsp.buf.definition()<CR>";
+    "<silent>gr" = "<cmd>lua vim.lsp.buf.references()<CR>";
     "<silent><leader>cd" = "<cmd>Lspsaga show_line_diagnostics<CR>";
     "<silent>K" = "<cmd>Lspsaga hover_doc<CR>";
   };
