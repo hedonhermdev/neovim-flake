@@ -103,7 +103,7 @@ with builtins;
       cmp_autopairs.on_confirm_done()
     )
 
-    local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
     local lspconfig = require('lspconfig')
 
@@ -146,7 +146,7 @@ with builtins;
 
     require("nvim-autopairs").setup()
 
-    require("lspsaga").init_lsp_saga()
+    require("lspsaga").setup()
   '';
 
   vim.nmap = {
