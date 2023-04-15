@@ -21,6 +21,7 @@
     p.tree-sitter-typescript
     p.tree-sitter-javascript
     p.tree-sitter-html
+    p.tree-sitter-markdown
   ]);
 
   buildPlug = name:
