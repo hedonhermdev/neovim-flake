@@ -22,6 +22,7 @@
     p.tree-sitter-javascript
     p.tree-sitter-html
     p.tree-sitter-markdown
+    p.tree-sitter-markdown-inline
   ]);
 
   buildPlug = name:
@@ -30,7 +31,7 @@
       version = "master";
       src = builtins.getAttr name inputs;
       postPatch =
-        if (name == "nvim-treesitter")
+        if (name == "treesitter")
         then ''
           rm -r parser
           ln -s ${treesitterGrammars} parser
