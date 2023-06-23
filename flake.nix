@@ -302,10 +302,7 @@
           };
 
           packages = rec {
-            inherit neovimBuilder configBuilder;
-            neovimPlugins = pkgs.neovimPlugins;
             nvimPacked = neovimBuilder (configBuilder { });
-
             default = nvimPacked;
           };
 
