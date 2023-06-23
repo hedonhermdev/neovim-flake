@@ -304,6 +304,7 @@
             buildInputs = [
               (neovimBuilder (configBuilder { }))
               pkgs.lazygit
+              pkgs.tree-sitter
             ];
           };
 
