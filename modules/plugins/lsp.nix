@@ -147,6 +147,8 @@ with builtins;
     require("nvim-autopairs").setup()
 
     require("lspsaga").setup()
+
+    vim.lsp.set_log_level('DEBUG')
   '';
 
   vim.nmap = {
