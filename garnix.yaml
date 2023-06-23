@@ -1,3 +1,4 @@
 builds:
+  exclude: []
   include:
-  - 'packages.x86_64-linux'.nvimPacked
+  - 'packages.x86_64-linux.nvimPacked'
