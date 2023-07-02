@@ -131,13 +131,13 @@
       flake = false;
     };
 
-    vsnip = {
-      url = "github:hrsh7th/vim-vsnip";
+    luasnip = {
+      url = "github:L3MON4D3/LuaSnip";
       flake = false;
     };
 
-    cmp-vsnip = {
-      url = "github:hrsh7th/cmp-vsnip";
+    cmp-luasnip = {
+      url = "github:L3MON4D3/LuaSnip";
       flake = false;
     };
 
@@ -232,10 +232,10 @@
         "cmp"
         "cmp-buffer"
         "cmp-calc"
+        "cmp-luasnip"
         "cmp-nvim-lsp"
         "cmp-path"
         "cmp-treesitter"
-        "cmp-vsnip"
         "code-action-menu"
         "cokeline"
         "commentary"
@@ -252,6 +252,7 @@
         "lspconfig"
         "lspkind"
         "lspsaga"
+        "luasnip"
         "move"
         "noice"
         "notice"
@@ -267,7 +268,6 @@
         "treesitter-context"
         "vim-nix"
         "vimtex"
-        "vsnip"
       ];
 
     in

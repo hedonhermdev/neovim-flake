@@ -11,8 +11,8 @@ with builtins;
       lsp_signature
       code-action-menu
       cmp
-      vsnip
-      cmp-vsnip
+      luasnip
+      cmp-luasnip
       cmp-buffer
       cmp-calc
       cmp-nvim-lsp
@@ -25,14 +25,13 @@ with builtins;
   ];
 
   vim.luaConfigRC = ''
-
       -- Set up nvim-cmp.
     local cmp = require'cmp'
 
     cmp.setup({
       snippet = {
         expand = function(args)
-          vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+          require('luasnip').lsp_expand(args.body)
         end,
       },
       window = {
@@ -44,15 +43,43 @@ with builtins;
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
         ['<C-Space>'] = cmp.mapping.complete(),
         ['<C-e>'] = cmp.mapping.abort(),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        ["<Tab>"] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.select_next_item()
+          -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable() 
+          -- they way you will only jump inside the snippet region
+          elseif luasnip.expand_or_jumpable() then
+            luasnip.expand_or_jump()
+          elseif has_words_before() then
+            cmp.complete()
+          else
+            fallback()
+          end
+        end, { "i", "s" }),
+
+        ["<S-Tab>"] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.select_prev_item()
+          elseif luasnip.jumpable(-1) then
+            luasnip.jump(-1)
+          else
+            fallback()
+          end
+        end, { "i", "s" }),
       }),
       sources = cmp.config.sources({
         { name = 'nvim_lsp' },
-        { name = 'vsnip' }, -- For vsnip users.
+        { name = 'luasnip' },
       }, {
         { name = 'buffer' },
+        { name = 'path' },
+        { name = 'calc' },
+        { name = 'treesitter' },
       })
     })
+
+    require("luasnip.loaders.from_vscode").lazy_load()
 
     cmp.setup.filetype('gitcommit', {
       sources = cmp.config.sources({
@@ -82,7 +109,25 @@ with builtins;
       capabilities = capabilities
     }
 
-    lspconfig.bashls.setup{
+    lspconfig.tsserver.setup {
+      capabilities = capabilities
+    }
+
+    require'lspconfig'.denols.setup{}
+
+    lspconfig.bashls.setup {
+      capabilities = capabilities
+    }
+
+    lspconfig.dockerls.setup {
+      capabilities = capabilities
+    }
+
+    lspconfig.docker_compose_language_service.setup{
+      capabilities = capabilities
+    }
+
+    lspconfig.helm_ls.setup{
       capabilities = capabilities
     }
 
@@ -107,6 +152,10 @@ with builtins;
     require("lspsaga").setup()
 
     vim.lsp.set_log_level('DEBUG')
+
+    vim.g.markdown_fenced_languages = {
+      "ts=typescript"
+    }
   '';
 
   vim.nmap = {
