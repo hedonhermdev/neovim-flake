@@ -215,6 +215,11 @@
       url = "github:ii14/exrc.vim";
       flake = false;
     };
+
+    friendly-snippets = {
+      url = "github:rafamadriz/friendly-snippets";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, mars-std, ... }@inputs:
@@ -236,6 +241,7 @@
         "commentary"
         "devicons"
         "exrc"
+        "friendly-snippets"
         "fugitive"
         "galaxyline"
         "gitsigns"

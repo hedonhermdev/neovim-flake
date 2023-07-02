@@ -292,6 +292,22 @@
         "type": "github"
       }
     },
+    "friendly-snippets": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1688241178,
+        "narHash": "sha256-yRARQn70R/8drOkPzUaBUIa0Ka62r3wNhxvdPNHhLuU=",
+        "owner": "rafamadriz",
+        "repo": "friendly-snippets",
+        "rev": "ad7cef5d538b023ee3af0fe3170cadb096171b1f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rafamadriz",
+        "repo": "friendly-snippets",
+        "type": "github"
+      }
+    },
     "fugitive": {
       "flake": false,
       "locked": {
@@ -666,6 +682,7 @@
         "commentary": "commentary",
         "devicons": "devicons",
         "exrc": "exrc",
+        "friendly-snippets": "friendly-snippets",
         "fugitive": "fugitive",
         "galaxyline": "galaxyline",
         "gitsigns": "gitsigns",
