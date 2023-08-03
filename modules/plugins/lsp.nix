@@ -162,8 +162,6 @@ with builtins;
 
     require("lspsaga").setup()
 
-    vim.lsp.set_log_level('DEBUG')
-
     vim.g.markdown_fenced_languages = {
       "ts=typescript"
     }
