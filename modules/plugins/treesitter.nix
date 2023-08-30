@@ -13,7 +13,6 @@ in {
     vim.opt.runtimepath:append("~/.nvim_treesitter/")
     require'nvim-treesitter.configs'.setup {
       parser_install_dir = "~/.nvim_treesitter/",
-      ensure_installed = "all",
       highlight = {
           enable = true,
       },
