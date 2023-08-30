@@ -30,13 +30,13 @@
       pname = name;
       version = "master";
       src = builtins.getAttr name inputs;
-      postPatch =
-        if (name == "treesitter")
-        then ''
-          rm -r parser
-          ln -s ${treesitterGrammars} parser
-        ''
-        else "";
+      # postPatch =
+      #   if (name == "treesitter")
+      #   then ''
+      #     rm -r parser
+      #     ln -s ${treesitterGrammars} parser
+      #   ''
+      #   else "";
     };
 in {
   neovimPlugins =
