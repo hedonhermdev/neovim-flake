@@ -220,6 +220,11 @@
       url = "github:rafamadriz/friendly-snippets";
       flake = false;
     };
+
+    true-zen = {
+      url = "github:pocco81/true-zen.nvim";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, mars-std, ... }@inputs:
@@ -266,6 +271,7 @@
         "telescope"
         "treesitter"
         "treesitter-context"
+        "true-zen"
         "vim-nix"
         "vimtex"
       ];

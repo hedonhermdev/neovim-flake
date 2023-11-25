@@ -26,5 +26,6 @@
     ./alpha.nix
     ./galaxyline.nix
     ./glow.nix
+    ./true-zen.nix
   ];
 }
