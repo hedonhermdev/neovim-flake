@@ -27,5 +27,6 @@
     ./galaxyline.nix
     ./glow.nix
     ./true-zen.nix
+    ./scnvim.nix
   ];
 }

@@ -225,6 +225,11 @@
       url = "github:pocco81/true-zen.nvim";
       flake = false;
     };
+
+    scnvim = {
+      url = "github:davidgranstrom/scnvim";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, mars-std, ... }@inputs:
@@ -266,6 +271,7 @@
         "nvim-tree"
         "plenary"
         "rust-tools"
+        "scnvim"
         "surround"
         "symbols-outline"
         "telescope"
