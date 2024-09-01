@@ -11,6 +11,21 @@
       flake = false;
     };
 
+    dressing = {
+      url = "github:stevearc/dressing.nvim";
+      flake = false;
+    };
+
+    avante = {
+      url = "github:yetone/avante.nvim";
+      flake = false;
+    };
+
+    render-markdown = {
+      url = "github:MeanderingProgrammer/render-markdown.nvim";
+      flake = false;
+    };
+
     catppuccin = {
       url = "github:catppuccin/nvim";
       flake = false;
@@ -91,12 +106,12 @@
       flake = false;
     };
 
-    notice = {
+    nui = {
       url = "github:MunifTanjim/nui.nvim";
       flake = false;
     };
 
-    nui = {
+    notify = {
       url = "github:rcarriga/nvim-notify";
       flake = false;
     };
@@ -280,6 +295,9 @@
         "true-zen"
         "vim-nix"
         "vimtex"
+        "dressing"
+        "avante"
+        "render-markdown"
       ];
 
     in

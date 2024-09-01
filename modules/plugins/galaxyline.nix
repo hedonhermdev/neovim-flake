@@ -24,7 +24,7 @@ with builtins;
       green = '#98c379',
       yellow = '#e5c07b',
       blue = '#61afef',
-      purple = '#7c7cff', -- tweaked to match custom color
+      purple = '#7c7cff',
       teal = '#56b6c2',
     }
 

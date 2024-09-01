@@ -10,6 +10,8 @@
     surround
     commentary
     exrc
+    nui
+    dressing
   ];
   imports = [
     ./treesitter.nix
@@ -21,12 +23,13 @@
     ./nvim-tree.nix
     ./git.nix
     ./numb.nix
-    # ./noice.nix
     ./lsp.nix
     ./alpha.nix
     ./galaxyline.nix
     ./glow.nix
     ./true-zen.nix
     ./scnvim.nix
+    ./avante.nix
+    ./render-markdown.nix
   ];
 }
