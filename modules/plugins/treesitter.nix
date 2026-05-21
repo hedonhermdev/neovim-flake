@@ -1,33 +1,21 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-with builtins;
-
-let
-  cfg = config.vim.treesitter;
-in {
-  vim.startPlugins = with pkgs.neovimPlugins; [
-    treesitter
+{
+  vim.startPlugins = [
+    pkgs.vimPlugins.nvim-treesitter.withAllGrammars
   ];
   vim.luaConfigRC = ''
-    vim.opt.runtimepath:append("~/.nvim_treesitter/")
-    require'nvim-treesitter.configs'.setup {
-      parser_install_dir = "~/.nvim_treesitter/",
-      highlight = {
-          enable = true,
-      },
-      indent = {
-          enable = true,
-      },
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = "gnn",
-          node_incremental = "grn",
-          scope_incremental = "grc",
-          node_decremental = "grm",
-        },
-      },
-    }
+    -- nvim-treesitter `main` branch no longer exposes a setup() entry point.
+    -- Drive highlights manually via FileType autocmd; folds via vim.treesitter.foldexpr.
+    vim.api.nvim_create_autocmd("FileType", {
+      group = vim.api.nvim_create_augroup("NvimTreesitterStart", { clear = true }),
+      callback = function(args)
+        pcall(vim.treesitter.start, args.buf)
+      end,
+    })
+
+    vim.opt.foldmethod = "expr"
+    vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    vim.opt.foldenable = false
   '';
 }

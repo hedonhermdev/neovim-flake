@@ -1,13 +1,22 @@
-{ config, pkgs, lib, ... }: 
-with lib;
-with builtins;
+{ config, pkgs, lib, ... }:
 {
-  vim.startPlugins = with pkgs.neovimPlugins; [
+  vim.optPlugins = with pkgs.neovimPlugins; [
     render-markdown
   ];
-  vim.luaConfigRC = ''
-    require('render-markdown').setup({
-      file_types = { 'markdown', 'avante' },
-    })
-  '';
+
+  vim.lazyPlugins = [
+    ''
+      {
+        "render-markdown",
+        ft = { "markdown", "Avante" },
+        after = function()
+          pcall(function()
+            require('render-markdown').setup({
+              file_types = { 'markdown', 'avante' },
+            })
+          end)
+        end,
+      }
+    ''
+  ];
 }

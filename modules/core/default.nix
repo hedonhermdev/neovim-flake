@@ -1,9 +1,8 @@
 { config, pkgs, lib, ... }:
 
-with lib;
-with builtins;
-
 let
+  inherit (lib) mkOption types filterAttrs mapAttrsToList;
+  inherit (builtins) concatStringsSep;
   cfg = config.vim;
   wrapLuaConfig = luaConfig: ''
     lua << EOF
@@ -32,13 +31,23 @@ in {
     startPlugins = mkOption {
       description = "List of plugins to load on startup";
       default = [];
-      type = with types; listOf (nullOr package);
+      type = with types; listOf package;
     };
 
     optPlugins = mkOption {
       description = "List of plugins to optionally load";
       default = [];
       type = with types; listOf package;
+    };
+
+    lazyPlugins = mkOption {
+      description = ''
+        List of lz.n plugin spec entries (each a Lua table literal as a
+        string). lz-n.nix wraps them in `require('lz.n').load({ ... })` after
+        all other config has been concatenated.
+      '';
+      default = [];
+      type = with types; listOf str;
     };
 
     vimAlias = mkOption {
@@ -104,57 +113,41 @@ in {
     tmap =
       mkMappingOption { description = "Defines 'Terminal mode' mappings"; };
   };
-  config = let 
+  config = let
     filterNonNull = mappings: filterAttrs (name: value: value != null) mappings;
-    matchCtrl = it: match "Ctrl-(.)(.*)" it;
-    mapKeyBinding = it:
-      let
-        groups = matchCtrl it;
-      in
-      if groups == null
-      then it
-      else "<C-${toUpper (head groups)}>${head (tail groups)}";
-    mapVimBinding = prefix: mappings:
-      mapAttrsFlatten (name: value: "${prefix} ${mapKeyBinding name} ${value}")
-        (filterNonNull mappings);
+    # Emit lua vim.keymap.set calls. `remap` controls remap=true/false.
+    mapLuaBinding = mode: remap: mappings:
+      mapAttrsToList (lhs: rhs:
+        ''vim.keymap.set("${mode}", "${lhs}", "${lib.escape [ "\"" "\\" ] rhs}", { remap = ${if remap then "true" else "false"}, silent = false })''
+      ) (filterNonNull mappings);
 
-    nmap = mapVimBinding "nmap" config.vim.nmap;
-    imap = mapVimBinding "imap" config.vim.imap;
-    vmap = mapVimBinding "vmap" config.vim.vmap;
-    xmap = mapVimBinding "xmap" config.vim.xmap;
-    smap = mapVimBinding "smap" config.vim.smap;
-    cmap = mapVimBinding "cmap" config.vim.cmap;
-    omap = mapVimBinding "omap" config.vim.omap;
-    tmap = mapVimBinding "tmap" config.vim.tmap;
+    nmap = mapLuaBinding "n" true config.vim.nmap;
+    imap = mapLuaBinding "i" true config.vim.imap;
+    vmap = mapLuaBinding "v" true config.vim.vmap;
+    xmap = mapLuaBinding "x" true config.vim.xmap;
+    smap = mapLuaBinding "s" true config.vim.smap;
+    cmap = mapLuaBinding "c" true config.vim.cmap;
+    omap = mapLuaBinding "o" true config.vim.omap;
+    tmap = mapLuaBinding "t" true config.vim.tmap;
 
-    nnoremap = mapVimBinding "nnoremap" config.vim.nnoremap;
-    inoremap = mapVimBinding "inoremap" config.vim.inoremap;
-    vnoremap = mapVimBinding "vnoremap" config.vim.vnoremap;
-    xnoremap = mapVimBinding "xnoremap" config.vim.xnoremap;
-    snoremap = mapVimBinding "snoremap" config.vim.snoremap;
-    cnoremap = mapVimBinding "cnoremap" config.vim.cnoremap;
-    onoremap = mapVimBinding "onoremap" config.vim.onoremap;
-    tnoremap = mapVimBinding "tnoremap" config.vim.tnoremap;
+    nnoremap = mapLuaBinding "n" false config.vim.nnoremap;
+    inoremap = mapLuaBinding "i" false config.vim.inoremap;
+    vnoremap = mapLuaBinding "v" false config.vim.vnoremap;
+    xnoremap = mapLuaBinding "x" false config.vim.xnoremap;
+    snoremap = mapLuaBinding "s" false config.vim.snoremap;
+    cnoremap = mapLuaBinding "c" false config.vim.cnoremap;
+    onoremap = mapLuaBinding "o" false config.vim.onoremap;
+    tnoremap = mapLuaBinding "t" false config.vim.tnoremap;
+
+    allKeymaps = concatStringsSep "\n" (
+      nmap ++ imap ++ vmap ++ xmap ++ smap ++ cmap ++ omap ++ tmap ++
+      nnoremap ++ inoremap ++ vnoremap ++ xnoremap ++ snoremap ++ cnoremap ++ onoremap ++ tnoremap
+    );
   in {
-    vim.configRC = ''
-      ${wrapLuaConfig (concatStringsSep "\n" [cfg.luaConfigRC])}
+    vim.configRC = wrapLuaConfig ''
+      ${cfg.luaConfigRC}
 
-      ${builtins.concatStringsSep "\n" nmap}
-      ${builtins.concatStringsSep "\n" imap}
-      ${builtins.concatStringsSep "\n" vmap}
-      ${builtins.concatStringsSep "\n" xmap}
-      ${builtins.concatStringsSep "\n" smap}
-      ${builtins.concatStringsSep "\n" cmap}
-      ${builtins.concatStringsSep "\n" omap}
-      ${builtins.concatStringsSep "\n" tmap}
-      ${builtins.concatStringsSep "\n" nnoremap}
-      ${builtins.concatStringsSep "\n" inoremap}
-      ${builtins.concatStringsSep "\n" vnoremap}
-      ${builtins.concatStringsSep "\n" xnoremap}
-      ${builtins.concatStringsSep "\n" snoremap}
-      ${builtins.concatStringsSep "\n" cnoremap}
-      ${builtins.concatStringsSep "\n" onoremap}
-      ${builtins.concatStringsSep "\n" tnoremap}
+      ${allKeymaps}
     '';
   };
 }

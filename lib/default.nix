@@ -4,12 +4,9 @@
   plugins,
   ...
 }: {
-  inherit (pkgs.lib);
-
-  configBuilder = import ./configBuilder.nix {inherit inputs;};
+  lib = pkgs.lib;
 
   neovimBuilder = import ./neovimBuilder.nix {inherit pkgs;};
 
   buildPluginOverlay = import ./buildPlugin.nix {inherit pkgs inputs plugins;};
 }
-

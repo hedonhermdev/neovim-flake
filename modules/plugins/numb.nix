@@ -1,14 +1,21 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-with builtins;
-
 {
-  vim.startPlugins = with pkgs.neovimPlugins; [
+  vim.optPlugins = with pkgs.neovimPlugins; [
     numb
   ];
 
-  vim.luaConfigRC = ''
-    require('numb').setup {}
-  '';
+  vim.lazyPlugins = [
+    ''
+      {
+        "numb",
+        event = "DeferredUIEnter",
+        after = function()
+          pcall(function()
+            ${builtins.readFile ./numb.lua}
+          end)
+        end,
+      }
+    ''
+  ];
 }

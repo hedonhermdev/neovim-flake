@@ -1,14 +1,10 @@
 { config, lib, pkgs, ... }:
 
-let
-  cfg = config.vim;
-in {
-  vim.configRC = ''
-    set nofoldenable
-    set foldlevel=99
-    set fillchars=fold:\
-    set foldtext=CustomFoldText()
-    setlocal foldmethod=expr
+{
+  vim.luaConfigRC = ''
+    vim.opt.foldenable = false
+    vim.opt.foldlevel = 99
+    vim.opt.fillchars = { fold = " " }
+    vim.opt.foldmethod = "expr"
   '';
-
 }

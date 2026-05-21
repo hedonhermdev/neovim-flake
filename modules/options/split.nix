@@ -1,10 +1,9 @@
 { config, pkgs, lib, ... }:
-let
-  cfg = config.vim;
-in {
-  vim.configRC = ''
-    " Splitting
-    set splitright
-    set splitbelow
+
+{
+  vim.luaConfigRC = ''
+    -- Splitting
+    vim.opt.splitright = true
+    vim.opt.splitbelow = true
   '';
 }

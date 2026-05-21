@@ -2,6 +2,5 @@
 {
   imports = [
     ./general.nix
-    ./plugins.nix
   ];
 }

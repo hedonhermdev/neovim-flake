@@ -4,3 +4,6 @@ builds:
   - 'packages.x86_64-linux.nvimPacked'
   - 'packages.aarch64-darwin.nvimPacked'
   - 'packages.aarch64-linux.nvimPacked'
+  - 'checks.x86_64-linux.*'
+  - 'checks.aarch64-linux.*'
+  - 'checks.aarch64-darwin.*'

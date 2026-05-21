@@ -1,20 +1,26 @@
 { config, pkgs, lib, ... }:
 
-with lib;
-with buitlins;
-
 {
-  vim.startPlugins = with pkgs.neovimPlugins; [
+  vim.optPlugins = with pkgs.neovimPlugins; [
     avante
   ];
 
-  vim.luaConfigRC = ''
-    local avante = require('avante')
-
-    avante.setup({
-      windows = {
-        position = "left"
+  vim.lazyPlugins = [
+    ''
+      {
+        "avante",
+        cmd = { "AvanteAsk", "AvanteToggle", "AvanteChat", "AvanteEdit" },
+        keys = { "<leader>aa", "<leader>at" },
+        after = function()
+          pcall(function()
+            require('avante').setup({
+              windows = {
+                position = "left",
+              },
+            })
+          end)
+        end,
       }
-    })
-  '';
+    ''
+  ];
 }

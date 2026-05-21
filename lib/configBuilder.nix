@@ -1,7 +1,0 @@
-{ inputs, ... }: {}: {
-  config = {
-    options = {
-      vim = {};
-    };
-  };
-}

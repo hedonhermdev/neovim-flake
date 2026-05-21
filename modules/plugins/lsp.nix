@@ -1,179 +1,160 @@
 { config, pkgs, lib, ... }:
 
-with lib;
-with builtins;
-
 {
   vim.startPlugins = with pkgs.neovimPlugins; [
       lspconfig
       lspkind
-      lspsaga
       lsp_signature
-      code-action-menu
-      cmp
+      blink-cmp
+      blink-lib
       luasnip
-      cmp-luasnip
-      cmp-buffer
-      cmp-calc
-      cmp-nvim-lsp
-      cmp-path
-      cmp-treesitter
-      rust-tools
-      symbols-outline
-      autopairs
       friendly-snippets
   ];
 
-  vim.luaConfigRC = ''
-      -- Set up nvim-cmp.
-    local cmp = require('cmp')
-    local luasnip = require('luasnip')
+  vim.optPlugins = with pkgs.neovimPlugins; [
+      rustaceanvim
+      outline
+      autopairs
+  ];
 
-    local has_words_before = function()
-      unpack = unpack or table.unpack
-      local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-      return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-    end
-
-    cmp.setup({
-      snippet = {
-        expand = function(args)
-          luasnip.lsp_expand(args.body)
+  vim.lazyPlugins = [
+    ''
+      {
+        "rustaceanvim",
+        ft = "rust",
+      }
+    ''
+    ''
+      {
+        "outline",
+        cmd = { "Outline", "OutlineOpen", "OutlineClose", "OutlineToggle" },
+        after = function()
+          pcall(function()
+            require('outline').setup()
+          end)
         end,
-      },
-      window = {
-        completion = cmp.config.window.bordered(),
-        documentation = cmp.config.window.bordered(),
-      },
-      mapping = cmp.mapping.preset.insert({
-        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<C-e>'] = cmp.mapping.abort(),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }),
-        ["<Tab>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_next_item()
-          elseif has_words_before() then
-            cmp.complete()
-          else
-            fallback()
-          end
-        end, { "i", "s" }),
+      }
+    ''
+    ''
+      {
+        "autopairs",
+        event = "InsertEnter",
+        after = function()
+          pcall(function()
+            require('nvim-autopairs').setup()
+          end)
+        end,
+      }
+    ''
+  ];
 
-        ["<S-Tab>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_prev_item()
-          else
-            fallback()
-          end
-        end, { "i", "s" }),
-      }),
-      sources = cmp.config.sources({
-        { name = 'nvim_lsp' },
-      }, {
-        { name = 'buffer' },
-        { name = 'path' },
-        { name = 'calc' },
-        { name = 'treesitter' },
-      })
-    })
-
+  vim.luaConfigRC = ''
+    -- Set up blink.cmp (replacement for nvim-cmp).
+    local luasnip = require('luasnip')
     require("luasnip.loaders.from_vscode").lazy_load()
 
-    cmp.setup.filetype('gitcommit', {
-      sources = cmp.config.sources({
-        { name = 'git' }, -- You can specify the `git` source if [you were installed it](https://github.com/petertriho/cmp-git).
-      }, {
-        { name = 'buffer' },
-      })
+    require('blink.cmp').setup({
+      keymap = {
+        preset = 'default',
+        ['<C-b>']     = { 'scroll_documentation_up', 'fallback' },
+        ['<C-f>']     = { 'scroll_documentation_down', 'fallback' },
+        ['<C-Space>'] = { 'show', 'show_documentation', 'hide_documentation' },
+        ['<C-e>']     = { 'hide', 'fallback' },
+        ['<CR>']      = { 'accept', 'fallback' },
+        ['<Tab>']     = { 'select_next', 'snippet_forward', 'fallback' },
+        ['<S-Tab>']   = { 'select_prev', 'snippet_backward', 'fallback' },
+      },
+
+      snippets = { preset = 'luasnip' },
+
+      sources = {
+        default = { 'lsp', 'path', 'snippets', 'buffer' },
+        per_filetype = {
+          gitcommit = { 'buffer' },
+        },
+      },
+
+      completion = {
+        documentation = { auto_show = true },
+        menu = {
+          border = 'rounded',
+          draw = { treesitter = { 'lsp' } },
+        },
+      },
+
+      signature = { enabled = false },
     })
 
-    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+    local capabilities = require('blink.cmp').get_lsp_capabilities()
 
-    local lspconfig = require('lspconfig')
+    -- Migrated to the vim.lsp.config / vim.lsp.enable API (Neovim 0.11+).
+    -- The old `require('lspconfig').<server>.setup{}` framework is
+    -- deprecated and will be removed in nvim-lspconfig v3.0.0.
+    -- nvim-lspconfig still ships per-server config files under
+    -- `lsp/<server>.lua` on the runtimepath, which vim.lsp.config picks
+    -- up automatically; we only override fields we care about here.
 
-    lspconfig.tsserver.setup{
-      capabilities = capabilities
-    }
+    vim.lsp.config('*', {
+      capabilities = capabilities,
+    })
 
-    lspconfig.rnix.setup{
-      capabilities = capabilities
-    }
+    vim.lsp.config('ts_ls', {
+      root_markers = { "package.json", "tsconfig.json", "jsconfig.json" },
+      workspace_required = true,
+    })
 
-    lspconfig.texlab.setup{
-      capabilities = capabilities
-    }
+    vim.lsp.config('denols', {
+      root_markers = { "deno.json", "deno.jsonc" },
+      workspace_required = true,
+    })
 
-    lspconfig.clangd.setup {
-      capabilities = capabilities
-    }
+    vim.lsp.enable({
+      "ts_ls",
+      "nixd",
+      "texlab",
+      "clangd",
+      "denols",
+      "bashls",
+      "dockerls",
+      "docker_compose_language_service",
+      "helm_ls",
+      "pyright",
+      "svelte",
+      "julials",
+    })
 
-    lspconfig.tsserver.setup {
-      capabilities = capabilities
-    }
-
-    require'lspconfig'.denols.setup{}
-
-    lspconfig.bashls.setup {
-      capabilities = capabilities
-    }
-
-    lspconfig.dockerls.setup {
-      capabilities = capabilities
-    }
-
-    lspconfig.docker_compose_language_service.setup{
-      capabilities = capabilities
-    }
-
-    lspconfig.helm_ls.setup{
-      capabilities = capabilities
-    }
-
-    lspconfig.pyright.setup {
-      capabilities = capabilities
-    }
-
-    lspconfig.svelte.setup {
-      capabilities = capabilities
-    }
-
-    lspconfig.julials.setup{
-      capabilities = capabilities
-    }
-
-    local rust_tools = require('rust-tools')
-    rust_tools.setup({
+    vim.g.rustaceanvim = {
       server = {
+        capabilities = capabilities,
         on_attach = function(_, bufnr)
-          vim.keymap.set("n", "<C-space>", rust_tools.hover_actions.hover_actions, { buffer = bufnr })
-          vim.keymap.set("n", "<Leader>a", rust_tools.code_action_group.code_action_group, { buffer = bufnr })
+          vim.keymap.set("n", "<C-space>", function() vim.cmd.RustLsp({ "hover", "actions" }) end, { buffer = bufnr })
+          vim.keymap.set("n", "<Leader>a", function() vim.cmd.RustLsp("codeAction") end, { buffer = bufnr })
         end,
       },
-      capabilities = capabilities
-    })
+    }
 
 
     require("lsp_signature").setup()
 
-    require("symbols-outline").setup()
-
-    require("nvim-autopairs").setup()
-
-    require("lspsaga").setup()
+    -- outline.nvim and nvim-autopairs setup moved into their lz.n
+    -- after-hooks below; vim.g.rustaceanvim is set here so rustaceanvim
+    -- picks it up on its own ft-triggered load.
 
     vim.g.markdown_fenced_languages = {
       "ts=typescript"
     }
-  '';
 
-  vim.nmap = {
-    "<silent><leader>ca" = "<cmd>Lspsaga code_action<CR>";
-    "<silent>gd" = "<cmd>Lspsaga peek_definition<CR>";
-    "<silent>gD" = "<cmd>lua vim.lsp.buf.definition()<CR>";
-    "<silent>gr" = "<cmd>lua vim.lsp.buf.references()<CR>";
-    "<silent><leader>cd" = "<cmd>Lspsaga show_line_diagnostics<CR>";
-    "<silent>K" = "<cmd>Lspsaga hover_doc<CR>";
-  };
+    vim.api.nvim_create_autocmd("LspAttach", {
+      callback = function(args)
+        local bufnr = args.buf
+        local opts = { buffer = bufnr, silent = true }
+        vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+        vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+        vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+        vim.keymap.set("n", "<leader>cd", vim.diagnostic.open_float, opts)
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+      end,
+    })
+  '';
 }

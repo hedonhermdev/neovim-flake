@@ -2,29 +2,33 @@
 
 let
   cfg = config.vim;
-in { 
-  vim.configRC = ''
-    """ GENERAL OPTIONS
+in {
+  vim.luaConfigRC = ''
+    -- GENERAL OPTIONS
 
-    let g:mapleader = ","
+    vim.g.mapleader = ","
 
-    set mouse=a " Enable mouse support
+    vim.opt.mouse = "a" -- Enable mouse support
 
-    syntax enable " Enable syntax highlighting
+    vim.cmd("syntax enable") -- Enable syntax highlighting
 
-    set wrap " Wrap long lines
-    set linebreak " Dont break words while wrapping lines
+    vim.opt.wrap = true -- Wrap long lines
+    vim.opt.linebreak = true -- Don't break words while wrapping lines
 
-    set encoding=utf-8 " Write files in UTF-8 encoding
-    set fileencoding=utf-8
+    vim.opt.encoding = "utf-8" -- Write files in UTF-8 encoding
+    vim.opt.fileencoding = "utf-8"
 
-    set number " Show line number.
-    set relativenumber " Show relative line number
+    vim.opt.number = true -- Show line number.
+    vim.opt.relativenumber = true -- Show relative line number
 
-    set t_Co=256 " Use all 256 colors
+    vim.opt.cursorline = true -- Highlight the current line
 
-    set cursorline " Highlight the current line
+    vim.opt.showmode = false -- don't need to see -- INSERT --
 
-    set noshowmode " don't need to see -- INSERT --
-    '';
+    -- Enable 24-bit RGB color in the terminal UI
+    vim.o.termguicolors = true
+
+    -- Read project-local .nvim.lua / .exrc / .nvimrc files (replaces exrc.vim plugin)
+    vim.o.exrc = true
+  '';
 }

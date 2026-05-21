@@ -1,14 +1,21 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-with builtins;
-
 {
-  vim.startPlugins = with pkgs.neovimPlugins; [
+  vim.optPlugins = with pkgs.neovimPlugins; [
     vimtex
   ];
 
-  vim.configRC = ''
-    let g:vimtex_view_method = '${pkgs.zathura}'
+  vim.lazyPlugins = [
+    ''
+      {
+        "vimtex",
+        ft = { "tex", "latex", "plaintex" },
+      }
+    ''
+  ];
+
+  # Set early — vimtex reads this on load.
+  vim.luaConfigRC = ''
+    vim.g.vimtex_view_method = "zathura"
   '';
 }

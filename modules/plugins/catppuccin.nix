@@ -1,11 +1,6 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-with builtins;
-let
-  cfg = config.vim.catpuccin;
-in {
-
+{
   vim.startPlugins = with pkgs.neovimPlugins; [
     catppuccin
   ];

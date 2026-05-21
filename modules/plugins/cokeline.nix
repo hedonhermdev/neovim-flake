@@ -1,16 +1,24 @@
 { config, lib, pkgs, ... }:
 
-with builtins;
-with lib;
 {
-  vim.startPlugins = with pkgs.neovimPlugins; [
+  vim.optPlugins = with pkgs.neovimPlugins; [
     cokeline
   ];
-  vim.luaConfigRC = ''
-    require('cokeline').setup({
-      buffers = {
-        filter_valid = function(buffer) return buffer.type ~= 'terminal' end,
-      },
-    })
-  '';
+  vim.lazyPlugins = [
+    ''
+      {
+        "cokeline",
+        event = "DeferredUIEnter",
+        after = function()
+          pcall(function()
+            require('cokeline').setup({
+              buffers = {
+                filter_valid = function(buffer) return buffer.type ~= 'terminal' end,
+              },
+            })
+          end)
+        end,
+      }
+    ''
+  ];
 }

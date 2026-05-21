@@ -4,15 +4,13 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    mars-std.url = "github:mars-research/mars-std";
-
     treesitter = {
-      url = "github:nvim-treesitter/nvim-treesitter";
+      url = "github:nvim-treesitter/nvim-treesitter/main";
       flake = false;
     };
 
-    dressing = {
-      url = "github:stevearc/dressing.nvim";
+    treesitter-textobjects = {
+      url = "github:nvim-treesitter/nvim-treesitter-textobjects/main";
       flake = false;
     };
 
@@ -32,7 +30,7 @@
     };
 
     treesitter-context = {
-      url = "github:lewis6991/nvim-treesitter-context";
+      url = "github:nvim-treesitter/nvim-treesitter-context/b311b30818951d01f7b4bf650521b868b3fece16";
       flake = false;
     };
 
@@ -91,16 +89,6 @@
       flake = false;
     };
 
-    surround = {
-      url = "github:tpope/vim-surround";
-      flake = false;
-    };
-
-    commentary = {
-      url = "github:tpope/vim-commentary";
-      flake = false;
-    };
-
     noice = {
       url = "github:folke/noice.nvim";
       flake = false;
@@ -108,11 +96,6 @@
 
     nui = {
       url = "github:MunifTanjim/nui.nvim";
-      flake = false;
-    };
-
-    notify = {
-      url = "github:rcarriga/nvim-notify";
       flake = false;
     };
 
@@ -126,23 +109,18 @@
       flake = false;
     };
 
-    lspsaga = {
-      url = "github:glepnir/lspsaga.nvim";
-      flake = false;
-    };
-
     lsp_signature = {
       url = "github:ray-x/lsp_signature.nvim";
       flake = false;
     };
 
-    code-action-menu = {
-      url = "github:weilbith/nvim-code-action-menu";
+    blink-cmp = {
+      url = "github:saghen/blink.cmp";
       flake = false;
     };
 
-    cmp = {
-      url = "github:hrsh7th/nvim-cmp";
+    blink-lib = {
+      url = "github:saghen/blink.lib";
       flake = false;
     };
 
@@ -151,38 +129,8 @@
       flake = false;
     };
 
-    cmp-luasnip = {
-      url = "github:L3MON4D3/LuaSnip";
-      flake = false;
-    };
-
-    cmp-buffer = {
-      url = "github:hrsh7th/cmp-buffer";
-      flake = false;
-    };
-
-    cmp-calc = {
-      url = "github:hrsh7th/cmp-calc";
-      flake = false;
-    };
-
-    cmp-nvim-lsp = {
-      url = "github:hrsh7th/cmp-nvim-lsp";
-      flake = false;
-    };
-
-    cmp-path = {
-      url = "github:hrsh7th/cmp-path";
-      flake = false;
-    };
-
-    cmp-treesitter = {
-      url = "github:ray-x/cmp-treesitter";
-      flake = false;
-    };
-
-    rust-tools = {
-      url = "github:simrat39/rust-tools.nvim";
+    rustaceanvim = {
+      url = "github:mrcjkb/rustaceanvim/1d89cf1b7b84862706398a263396b24960d80695";
       flake = false;
     };
 
@@ -191,13 +139,8 @@
       flake = false;
     };
 
-    symbols-outline = {
-      url = "github:simrat39/symbols-outline.nvim";
-      flake = false;
-    };
-
-    alpha = {
-      url = "github:goolord/alpha-nvim";
+    outline = {
+      url = "github:hedyhli/outline.nvim";
       flake = false;
     };
 
@@ -206,18 +149,8 @@
       flake = false;
     };
 
-    galaxyline = {
-      url = "github:glepnir/galaxyline.nvim";
-      flake = false;
-    };
-
     plenary = {
       url = "github:nvim-lua/plenary.nvim";
-      flake = false;
-    };
-
-    glow = {
-      url = "github:ellisonleao/glow.nvim";
       flake = false;
     };
 
@@ -226,18 +159,8 @@
       flake = false;
     };
 
-    exrc = {
-      url = "github:ii14/exrc.vim";
-      flake = false;
-    };
-
     friendly-snippets = {
       url = "github:rafamadriz/friendly-snippets";
-      flake = false;
-    };
-
-    true-zen = {
-      url = "github:pocco81/true-zen.nvim";
       flake = false;
     };
 
@@ -247,106 +170,123 @@
     };
   };
 
-  outputs = { self, nixpkgs, mars-std, ... }@inputs:
+  outputs = { self, nixpkgs, ... }@inputs:
     let
       supportedSystems = [ "aarch64-darwin" "aarch64-linux" "x86_64-linux" ];
+      forAllSystems = f: nixpkgs.lib.genAttrs supportedSystems (system: f system);
       plugins = [
-        "alpha"
-        "autopairs"
-        "catppuccin"
-        "cmp"
-        "cmp-buffer"
-        "cmp-calc"
-        "cmp-luasnip"
-        "cmp-nvim-lsp"
-        "cmp-path"
-        "cmp-treesitter"
-        "code-action-menu"
-        "cokeline"
-        "commentary"
+        { name = "autopairs"; requireCheck = "nvim-autopairs"; }
+        { name = "catppuccin"; requireCheck = "catppuccin"; }
+        { name = "blink-cmp"; dependencies = [ "luasnip" "blink-lib" ]; requireCheck = "blink.cmp"; }
+        { name = "blink-lib"; requireCheck = "blink.lib"; }
+        { name = "cokeline"; dependencies = [ "plenary" ]; }
         "devicons"
-        "exrc"
         "friendly-snippets"
         "fugitive"
-        "galaxyline"
         "gitsigns"
-        "glow"
-        "indent-blankline"
+        { name = "indent-blankline"; requireCheck = "ibl"; }
         "lazygit"
-        "lsp_signature"
+        { name = "lsp_signature"; dependencies = [ "lspconfig" ]; }
         "lspconfig"
         "lspkind"
-        "lspsaga"
         "luasnip"
         "move"
-        "noice"
-        "notice"
+        { name = "noice"; dependencies = [ "nui" ]; }
         "nui"
         "numb"
-        "nvim-tree"
-        "plenary"
-        "rust-tools"
+        { name = "nvim-tree"; requireCheck = "nvim-tree"; }
+        { name = "plenary"; requireCheck = "plenary"; }
+        { name = "rustaceanvim"; dependencies = [ "lspconfig" "plenary" ]; requireCheck = "rustaceanvim"; }
         "scnvim"
-        "surround"
-        "symbols-outline"
-        "telescope"
-        "treesitter"
-        "treesitter-context"
-        "true-zen"
+        { name = "outline"; requireCheck = "outline"; }
+        { name = "telescope"; dependencies = [ "plenary" ]; }
+        { name = "treesitter"; requireCheck = "nvim-treesitter"; }
+        { name = "treesitter-textobjects"; dependencies = [ "treesitter" ]; requireCheck = "nvim-treesitter-textobjects"; }
+        { name = "treesitter-context"; dependencies = [ "treesitter" ]; }
         "vim-nix"
         "vimtex"
-        "dressing"
-        "avante"
-        "render-markdown"
+        { name = "avante"; dependencies = [ "plenary" "nui" ]; requireCheck = "avante"; }
+        { name = "render-markdown"; dependencies = [ "treesitter" ]; }
       ];
 
     in
-    mars-std.lib.eachSystem supportedSystems
-      (system:
+    {
+      apps = forAllSystems (system:
         let
-          lib = import ./lib { inherit pkgs inputs plugins; };
-
-          inherit (lib) buildPluginOverlay neovimBuilder configBuilder;
-
           pkgs = import nixpkgs {
             inherit system;
-
             config = { allowUnfree = true; };
-
-            overlays = [
-              buildPluginOverlay
-            ];
+            overlays = [ (import ./lib { inherit pkgs inputs plugins; }).buildPluginOverlay ];
           };
-
-
-        in
-        rec {
-          apps = rec {
-            nvim = {
-              type = "app";
-              program = [ (neovimBuilder (configBuilder { })) ];
-            };
-
-            default = nvim;
+          neovimBuilder = (import ./lib { inherit pkgs inputs plugins; }).neovimBuilder;
+          nvim = {
+            type = "app";
+            program = "${neovimBuilder { config = {}; }}/bin/nvim";
           };
+        in {
+          inherit nvim;
+          default = nvim;
+        });
 
-          devShell = pkgs.mkShell {
+      devShells = forAllSystems (system:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+            config = { allowUnfree = true; };
+            overlays = [ (import ./lib { inherit pkgs inputs plugins; }).buildPluginOverlay ];
+          };
+          neovimBuilder = (import ./lib { inherit pkgs inputs plugins; }).neovimBuilder;
+        in {
+          default = pkgs.mkShell {
             buildInputs = [
-              (neovimBuilder (configBuilder { }))
+              (neovimBuilder { config = {}; })
               pkgs.lazygit
               pkgs.tree-sitter
             ];
           };
+        });
 
-          packages = rec {
-            nvimPacked = neovimBuilder (configBuilder { });
-            default = nvimPacked;
+      packages = forAllSystems (system:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+            config = { allowUnfree = true; };
+            overlays = [ (import ./lib { inherit pkgs inputs plugins; }).buildPluginOverlay ];
           };
+          neovimBuilder = (import ./lib { inherit pkgs inputs plugins; }).neovimBuilder;
+          nvimPacked = neovimBuilder { config = {}; };
+        in {
+          inherit nvimPacked;
+          default = nvimPacked;
+        });
 
-        }) // {
       overlays.default = final: prev: {
-        inherit (self.lib) neovimBuilder configBuilder;
         nvimPacked = self.packages.${final.system}.nvimPacked;
       };
+
+      nixosModules.default = { config, lib, pkgs, ... }: {
+        options.programs.nvimPacked = {
+          enable = lib.mkEnableOption "hedonhermdev's neovim configuration";
+        };
+        config = lib.mkIf config.programs.nvimPacked.enable {
+          environment.systemPackages = [
+            self.packages.${pkgs.system}.nvimPacked
+          ];
+        };
+      };
+
+      homeManagerModules.default = { config, lib, pkgs, ... }: {
+        options.programs.nvimPacked = {
+          enable = lib.mkEnableOption "hedonhermdev's neovim configuration";
+        };
+        config = lib.mkIf config.programs.nvimPacked.enable {
+          home.packages = [
+            self.packages.${pkgs.system}.nvimPacked
+          ];
+        };
+      };
+
+      formatter = forAllSystems (system:
+        (import nixpkgs { inherit system; }).nixpkgs-fmt);
     };
 }
