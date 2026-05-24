@@ -32,7 +32,6 @@ pkgs.wrapNeovim myNeovimUnwrapped {
     ripgrep
     fd
     stylua
-    black
     ruff
     prettier
     rustfmt

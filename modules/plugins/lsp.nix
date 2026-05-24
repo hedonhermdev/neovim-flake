@@ -108,6 +108,42 @@
       workspace_required = true,
     })
 
+    -- Pyright: prefer the active virtualenv's interpreter. Use the
+    -- unresolved `$VIRTUAL_ENV/bin/python` path so Pyright can find the
+    -- venv's `pyvenv.cfg` (resolving the symlink hands it the base
+    -- interpreter and Pyright stops seeing the venv's site-packages).
+    local function pyright_python_path()
+      local venv = os.getenv("VIRTUAL_ENV")
+      if venv and venv ~= "" then
+        return venv .. "/bin/python"
+      end
+      return vim.fn.exepath("python3")
+    end
+
+    vim.lsp.config('pyright', {
+      settings = {
+        python = {
+          pythonPath = pyright_python_path(),
+          analysis = {
+            autoSearchPaths = true,
+            useLibraryCodeForTypes = true,
+            diagnosticMode = "openFilesOnly",
+          },
+        },
+      },
+      before_init = function(_, config)
+        config.settings.python.pythonPath = pyright_python_path()
+      end,
+    })
+
+    -- Ruff: linting + import sorting + (optional) formatting via LSP.
+    -- Disable hover so Pyright owns hover/type info; ruff owns diagnostics.
+    vim.lsp.config('ruff', {
+      on_attach = function(client, _)
+        client.server_capabilities.hoverProvider = false
+      end,
+    })
+
     vim.lsp.enable({
       "ts_ls",
       "nixd",
@@ -119,6 +155,7 @@
       "docker_compose_language_service",
       "helm_ls",
       "pyright",
+      "ruff",
       "svelte",
       "julials",
     })
