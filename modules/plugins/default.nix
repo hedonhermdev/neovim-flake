@@ -69,5 +69,6 @@
     ./oil.nix
     ./move.nix
     ./lz-n.nix
+    ./copilot.nix
   ];
 }

@@ -168,6 +168,11 @@
       url = "github:davidgranstrom/scnvim";
       flake = false;
     };
+
+    copilot-vim = {
+      url = "github:github/copilot.vim";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, ... }@inputs:
@@ -207,6 +212,7 @@
         "vimtex"
         { name = "avante"; dependencies = [ "plenary" "nui" ]; requireCheck = "avante"; }
         { name = "render-markdown"; dependencies = [ "treesitter" ]; }
+        { name = "copilot-vim"; requireCheck = []; }
       ];
 
     in

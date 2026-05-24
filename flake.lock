@@ -96,6 +96,22 @@
         "type": "github"
       }
     },
+    "copilot-vim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1767991757,
+        "narHash": "sha256-McrihGscbvt2lqHil3NxHUfgx/IAFDf7tdbBkv4vTK4=",
+        "owner": "github",
+        "repo": "copilot.vim",
+        "rev": "a12fd5672110c8aa7e3c8419e28c96943ca179be",
+        "type": "github"
+      },
+      "original": {
+        "owner": "github",
+        "repo": "copilot.vim",
+        "type": "github"
+      }
+    },
     "devicons": {
       "flake": false,
       "locked": {
@@ -424,6 +440,7 @@
         "blink-lib": "blink-lib",
         "catppuccin": "catppuccin",
         "cokeline": "cokeline",
+        "copilot-vim": "copilot-vim",
         "devicons": "devicons",
         "friendly-snippets": "friendly-snippets",
         "fugitive": "fugitive",
