@@ -8,8 +8,9 @@
   vim.lazyPlugins = [
     ''
       {
-        "copilot.vim",
+        "copilot-vim",
         event = "InsertEnter",
+        cmd = "Copilot",
       }
     ''
   ];
