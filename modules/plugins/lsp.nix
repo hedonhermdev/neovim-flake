@@ -51,7 +51,13 @@
   vim.luaConfigRC = ''
     -- Set up blink.cmp (replacement for nvim-cmp).
     local luasnip = require('luasnip')
-    require("luasnip.loaders.from_vscode").lazy_load()
+    -- Defer the friendly-snippets vscode loader off the startup path (FIXME #12):
+    -- lazy_load() walks ~500 friendly-snippets files, which delayed first UI
+    -- paint when run inline. vim.schedule runs it after the editor has painted
+    -- (and long before any completion/snippet expansion needs the snippets).
+    vim.schedule(function()
+      require("luasnip.loaders.from_vscode").lazy_load()
+    end)
 
     require('blink.cmp').setup({
       keymap = {
@@ -123,7 +129,6 @@
     vim.lsp.config('pyright', {
       settings = {
         python = {
-          pythonPath = pyright_python_path(),
           analysis = {
             autoSearchPaths = true,
             useLibraryCodeForTypes = true,
@@ -131,6 +136,10 @@
           },
         },
       },
+      -- The interpreter path is set solely here (FIXME #16): before_init
+      -- re-evaluates VIRTUAL_ENV at LSP-init time, so it picks up a venv
+      -- activated after config eval. A duplicate static settings entry would be
+      -- captured once at startup and could go stale, so it was removed.
       before_init = function(_, config)
         config.settings.python.pythonPath = pyright_python_path()
       end,
@@ -162,7 +171,10 @@
 
     vim.g.rustaceanvim = {
       server = {
-        capabilities = capabilities,
+        -- FIXME #27: no explicit capability table here. rustaceanvim resolves
+        -- vim.lsp.config('*') and deep-merges it over the server config, so the
+        -- blink.cmp completion support set on '*' above is injected automatically,
+        -- and rustaceanvim's own rust-specific defaults are preserved by that merge.
         on_attach = function(_, bufnr)
           vim.keymap.set("n", "<C-space>", function() vim.cmd.RustLsp({ "hover", "actions" }) end, { buffer = bufnr })
           vim.keymap.set("n", "<Leader>a", function() vim.cmd.RustLsp("codeAction") end, { buffer = bufnr })
@@ -171,18 +183,37 @@
     }
 
 
-    require("lsp_signature").setup()
+    -- lsp_signature is attached per-buffer in the LspAttach autocmd below
+    -- (FIXME #25), not via a one-shot global setup() at startup. on_attach binds
+    -- the signature-help handler to the specific buffer that just got an LSP
+    -- client, which is the plugin's documented integration point.
 
     -- outline.nvim and nvim-autopairs setup moved into their lz.n
     -- after-hooks below; vim.g.rustaceanvim is set here so rustaceanvim
     -- picks it up on its own ft-triggered load.
 
-    vim.g.markdown_fenced_languages = {
-      "ts=typescript"
-    }
+    -- Append our fenced-language mappings instead of clobbering whatever the
+    -- user / runtime already set (FIXME #26). vim.g.* can't be mutated in place,
+    -- so read the existing list, extend with any of ours not already present,
+    -- and write it back.
+    do
+      local fenced = vim.g.markdown_fenced_languages or {}
+      local seen = {}
+      for _, v in ipairs(fenced) do seen[v] = true end
+      for _, v in ipairs({ "ts=typescript" }) do
+        if not seen[v] then
+          table.insert(fenced, v)
+          seen[v] = true
+        end
+      end
+      vim.g.markdown_fenced_languages = fenced
+    end
 
     vim.api.nvim_create_autocmd("LspAttach", {
       callback = function(args)
+        -- Attach lsp_signature to this buffer (FIXME #25), per its documented
+        -- on_attach(cfg, bufnr) API, instead of a one-shot global setup().
+        pcall(function() require("lsp_signature").on_attach({}, args.buf) end)
         local bufnr = args.buf
         local opts = { buffer = bufnr, silent = true }
         vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)

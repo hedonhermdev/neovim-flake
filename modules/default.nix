@@ -6,6 +6,7 @@
     ./plugins
     ./keybindings
     ./commands
+    ./languages
   ];
 }
 

@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
 
-let
-  cfg = config.vim.treesitter-context;
-in {
+{
   vim.optPlugins = with pkgs.neovimPlugins; [
     treesitter-context
   ];

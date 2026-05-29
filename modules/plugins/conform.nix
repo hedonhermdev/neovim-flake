@@ -5,11 +5,16 @@
     pkgs.vimPlugins.conform-nvim
   ];
 
+  # NOTE: BufWritePre is intentionally NOT a trigger here. lz.n would
+  # packadd conform on the *same* BufWritePre that should already have
+  # the format_on_save autocmd registered, so the first :w of a session
+  # wouldn't format. Trigger on BufReadPost/BufNewFile so format_on_save
+  # is wired up well before any :w happens.
   vim.lazyPlugins = [
     ''
       {
         "conform.nvim",
-        event = { "BufWritePre" },
+        event = { "BufReadPost", "BufNewFile" },
         cmd = { "ConformInfo", "FormatDisable", "FormatEnable", "FormatToggle" },
         keys = { "<leader>cf" },
         after = function()

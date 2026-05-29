@@ -65,8 +65,6 @@
     ./neotest.nix
     ./nvim-bqf.nix
     ./persistence.nix
-    ./codecompanion.nix
-    ./oil.nix
     ./move.nix
     ./lz-n.nix
     ./copilot.nix

@@ -17,10 +17,14 @@
         cmd = "Telescope",
         after = function()
           pcall(function()
+            -- rg/fd are provided on nvim's PATH by lib/neovimBuilder.nix
+            -- (corePackages), which is the single source for these binaries
+            -- (FIXME #20). Reference them by bare name rather than
+            -- re-interpolating their nix-store paths here.
             require("telescope").setup {
               defaults = {
                 vimgrep_arguments = {
-                  "${pkgs.ripgrep}/bin/rg",
+                  "rg",
                   "--color=never",
                   "--no-heading",
                   "--with-filename",
@@ -32,7 +36,7 @@
               pickers = {
                 find_files = {
                   find_command = {
-                    "${pkgs.fd}/bin/fd",
+                    "fd",
                     "--type",
                     "f",
                   },

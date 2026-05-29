@@ -5,11 +5,42 @@
     nvim-tree
   ];
 
-  # Must run early — before the first file is opened — so netrw doesn't
-  # hijack directory buffers. Plugin itself stays lazy.
+  # FIXME #30: with netrw disabled and nvim-tree lazy, opening `nvim some-dir/`
+  # used to leave an empty buffer because nothing claimed the directory (oil was
+  # removed; the user uses nvim-tree exclusively). We hijack directory buffers
+  # ourselves: a startup BufEnter autocmd detects a directory buffer, lazy-loads
+  # nvim-tree via lz.n, and opens the tree IN THE CURRENT WINDOW rooted there, so
+  # the directory buffer is replaced by the tree (current buffer ft = NvimTree).
+  # BufEnter is used (not VimEnter) because VimEnter does not fire in headless
+  # `-c qa` sessions, whereas BufEnter does — keeping the validator meaningful
+  # while matching real interactive behavior.
   vim.luaConfigRC = ''
     vim.g.loaded_netrw = 1
     vim.g.loaded_netrwPlugin = 1
+
+    local dir_hijack = vim.api.nvim_create_augroup("NvimTreeDirHijack", { clear = true })
+    vim.api.nvim_create_autocmd("BufEnter", {
+      group = dir_hijack,
+      callback = function(data)
+        local name = vim.api.nvim_buf_get_name(data.buf)
+        if name == "" or vim.fn.isdirectory(name) ~= 1 then
+          return
+        end
+        pcall(function()
+          require("lz.n").trigger_load("nvim-tree")
+          local api = require("nvim-tree.api")
+          -- Open the tree over the current window so the directory buffer is
+          -- replaced (not left alongside an empty buffer), then wipe the now
+          -- orphaned directory buffer if it survived.
+          api.tree.open({ path = name, current_window = true })
+          if vim.api.nvim_buf_is_valid(data.buf)
+            and vim.api.nvim_get_option_value("filetype", { buf = data.buf }) ~= "NvimTree"
+            and vim.fn.win_findbuf(data.buf)[1] == nil then
+            pcall(vim.api.nvim_buf_delete, data.buf, { force = true })
+          end
+        end)
+      end,
+    })
   '';
 
   vim.lazyPlugins = [

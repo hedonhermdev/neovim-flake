@@ -13,10 +13,20 @@
         after = function()
           pcall(function()
             require("neoclip").setup({})
-            -- Make sure telescope is loaded before registering the
-            -- extension; lz.n's command stub for :Telescope handles the
-            -- packadd.
-            vim.cmd("packadd telescope")
+            -- Ensure telescope is fully loaded *and* its lz.n `after`
+            -- hook (which calls require("telescope").setup{}) has run
+            -- before registering the extension. `trigger_load` does
+            -- both; a bare `packadd` would skip the setup hook (FIXME #17).
+            local lz_ok, lz = pcall(require, "lz.n")
+            if lz_ok and lz.trigger_load then
+              lz.trigger_load("telescope")
+            else
+              -- Fallback for the (currently unreachable) case where lz.n is
+              -- absent: packadd alone leaves telescope unconfigured, so run
+              -- its setup explicitly rather than skipping it.
+              vim.cmd("packadd telescope")
+              pcall(function() require("telescope").setup({}) end)
+            end
             pcall(function()
               require("telescope").load_extension("neoclip")
             end)

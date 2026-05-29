@@ -14,11 +14,6 @@
       flake = false;
     };
 
-    avante = {
-      url = "github:yetone/avante.nvim";
-      flake = false;
-    };
-
     render-markdown = {
       url = "github:MeanderingProgrammer/render-markdown.nvim";
       flake = false;
@@ -74,11 +69,6 @@
       flake = false;
     };
 
-    repeat = {
-      url = "github:tpope/vim-repeat";
-      flake = false;
-    };
-
     fugitive = {
       url = "github:tpope/vim-fugitive";
       flake = false;
@@ -86,16 +76,6 @@
 
     lazygit = {
       url = "github:kdheepak/lazygit.nvim";
-      flake = false;
-    };
-
-    noice = {
-      url = "github:folke/noice.nvim";
-      flake = false;
-    };
-
-    nui = {
-      url = "github:MunifTanjim/nui.nvim";
       flake = false;
     };
 
@@ -196,21 +176,20 @@
         "lspkind"
         "luasnip"
         "move"
-        { name = "noice"; dependencies = [ "nui" ]; }
-        "nui"
         "numb"
         { name = "nvim-tree"; requireCheck = "nvim-tree"; }
-        { name = "plenary"; requireCheck = "plenary"; }
         { name = "rustaceanvim"; dependencies = [ "lspconfig" "plenary" ]; requireCheck = "rustaceanvim"; }
         "scnvim"
         { name = "outline"; requireCheck = "outline"; }
         { name = "telescope"; dependencies = [ "plenary" ]; }
-        { name = "treesitter"; requireCheck = "nvim-treesitter"; }
+        # treesitter / plenary / nui are NOT built from flake inputs (FIXME #2):
+        # the `neovimPlugins` overlay aliases these names to the nixpkgs
+        # derivations (nvim-treesitter / plenary.nvim / nui.nvim) that are
+        # already pulled in transitively, so only one copy lands on the rtp.
         { name = "treesitter-textobjects"; dependencies = [ "treesitter" ]; requireCheck = "nvim-treesitter-textobjects"; }
         { name = "treesitter-context"; dependencies = [ "treesitter" ]; }
         "vim-nix"
         "vimtex"
-        { name = "avante"; dependencies = [ "plenary" "nui" ]; requireCheck = "avante"; }
         { name = "render-markdown"; dependencies = [ "treesitter" ]; }
         { name = "copilot-vim"; requireCheck = []; }
       ];
@@ -261,8 +240,24 @@
           };
           neovimBuilder = (import ./lib { inherit pkgs inputs plugins; }).neovimBuilder;
           nvimPacked = neovimBuilder { config = {}; };
+          # All language toolchains disabled — the lean core build (FIXME #19).
+          # Demonstrates the closure-size win and is useful for headless/CI use.
+          nvimMinimal = neovimBuilder {
+            config.vim.languages = {
+              nix.enable = false;
+              lua.enable = false;
+              shell.enable = false;
+              web.enable = false;
+              markdown.enable = false;
+              python.enable = false;
+              latex.enable = false;
+              c.enable = false;
+              docker.enable = false;
+              rust.enable = false;
+            };
+          };
         in {
-          inherit nvimPacked;
+          inherit nvimPacked nvimMinimal;
           default = nvimPacked;
         });
 

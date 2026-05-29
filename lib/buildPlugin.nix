@@ -61,6 +61,13 @@
         find target -type f \( -name 'libblink_cmp_fuzzy.so' \
                             -o -name 'libblink_cmp_fuzzy.dylib' \) \
           -exec cp {} $out/lib/ \;
+        # `find -exec cp` exits 0 even when it matched nothing, which would
+        # leave $out/lib empty and produce a dangling symlink at the consumer
+        # (FIXME #3). Assert the cdylib actually exists before we declare success.
+        if [ -z "$(find "$out/lib" -name 'libblink_cmp_fuzzy.*' -print -quit)" ]; then
+          echo "ERROR: blink fuzzy cdylib not produced (no libblink_cmp_fuzzy.{so,dylib} under target/)" >&2
+          exit 1
+        fi
         if [ -f target/release/version ]; then
           cp target/release/version $out/lib/version
         fi
@@ -94,10 +101,22 @@
     });
 in {
   neovimPlugins =
-    builtins.listToAttrs
-    (map (spec: {
-        inherit (spec) name;
-        value = buildPlug spec;
-      })
-      pluginSpecs);
+    (builtins.listToAttrs
+      (map (spec: {
+          inherit (spec) name;
+          value = buildPlug spec;
+        })
+        pluginSpecs))
+    # Deduplicated single-source aliases (FIXME #2). These plugins are already
+    # pulled onto the runtimepath transitively from nixpkgs (e.g. avante-nvim →
+    # plenary.nvim / nui.nvim / nvim-treesitter; diffview/neotest → plenary.nvim).
+    # Rather than ALSO building a second copy from a flake input, we point the
+    # dependency name at the same nixpkgs derivation the transitive deps use, so
+    # exactly one copy lands on the rtp. nvim-treesitter in nixpkgs tracks the
+    # `main` branch and exposes `indentexpr()`, matching what treesitter.nix needs.
+    // {
+      treesitter = prev.vimPlugins.nvim-treesitter;
+      plenary = prev.vimPlugins.plenary-nvim;
+      nui = prev.vimPlugins.nui-nvim;
+    };
 }

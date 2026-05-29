@@ -1,3 +1,9 @@
+-- WARNING: keep "${port}" / "${workspaceFolder}" out of any Nix interpolation.
+-- This file is read verbatim by dap.nix via `builtins.readFile`, which returns
+-- the content as a plain string, so the DAP placeholder literals below
+-- (expanded by nvim-dap at debug time) are safe today. Do NOT inline this
+-- content directly into a Nix `''...''` string — Nix would treat "${...}" as
+-- antiquotation and either error or substitute the wrong value. Keep it .lua.
 local dap = require("dap")
 local dapui = require("dapui")
 
@@ -20,9 +26,24 @@ vim.fn.sign_define("DapBreakpoint", { text = "●", texthl = "DiagnosticError", 
 vim.fn.sign_define("DapBreakpointCondition", { text = "◆", texthl = "DiagnosticWarn", linehl = "", numhl = "" })
 vim.fn.sign_define("DapStopped", { text = "▶", texthl = "DiagnosticOk", linehl = "Visual", numhl = "" })
 
--- Python adapter (uses debugpy from PATH)
+-- Python adapter (FIXME #21). Prefer the active virtualenv's interpreter so
+-- debugpy resolves the project's own environment; fall back to PATH python3
+-- (provided when vim.languages.python.enable is set). Using a bare "python3"
+-- unconditionally picked the wrong interpreter inside venv projects.
+-- nvim-dap-python is an opt plugin that lz.n does not load (only nvim-dap is
+-- triggered), so packadd it before requiring its module.
 pcall(function()
-  require("dap-python").setup("python3")
+  vim.cmd("packadd nvim-dap-python")
+  local function dap_python_path()
+    local venv = os.getenv("VIRTUAL_ENV")
+    if venv and venv ~= "" then
+      return venv .. "/bin/python"
+    end
+    local p = vim.fn.exepath("python3")
+    if p ~= "" then return p end
+    return "python3"
+  end
+  require("dap-python").setup(dap_python_path())
 end)
 
 -- Rust adapter via codelldb if available; rustaceanvim wires up its own DAP automatically.

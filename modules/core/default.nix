@@ -116,9 +116,11 @@ in {
   config = let
     filterNonNull = mappings: filterAttrs (name: value: value != null) mappings;
     # Emit lua vim.keymap.set calls. `remap` controls remap=true/false.
+    # silent=true by default so `:Cmd<CR>`-style mappings don't echo the
+    # command on the cmdline every time they fire (FIXME #8).
     mapLuaBinding = mode: remap: mappings:
       mapAttrsToList (lhs: rhs:
-        ''vim.keymap.set("${mode}", "${lhs}", "${lib.escape [ "\"" "\\" ] rhs}", { remap = ${if remap then "true" else "false"}, silent = false })''
+        ''vim.keymap.set("${mode}", "${lhs}", "${lib.escape [ "\"" "\\" ] rhs}", { remap = ${if remap then "true" else "false"}, silent = true })''
       ) (filterNonNull mappings);
 
     nmap = mapLuaBinding "n" true config.vim.nmap;
