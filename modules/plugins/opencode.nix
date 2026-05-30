@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ pkgs, ... }:
 
 {
   # opencode.nvim drives the `opencode` CLI from inside Neovim (replacing
@@ -14,8 +14,39 @@
   # opencode.nvim has no setup() — it reads `vim.g.opencode_opts` (an
   # `opencode.Opts`). Set the global + autoread at startup (cheap, no require).
   vim.luaConfigRC = ''
+    -- Drive opencode's window via `snacks.terminal` instead of the plugin's
+    -- built-in terminal, reusing the snacks instance configured in ./snacks.nix
+    -- (terminal = { enabled = true }). `opencode.terminal.setup` is still called
+    -- on the snacks window so the in-terminal navigation keymaps + process
+    -- cleanup keep working. (Pattern from opencode.nvim's README.)
+    local opencode_cmd = "opencode --port"
+    ---@type snacks.terminal.Opts
+    local snacks_terminal_opts = {
+      win = {
+        position = "left",
+        enter = false,
+        on_win = function(win)
+          require("opencode.terminal").setup(win.win)
+        end,
+      },
+    }
+
     ---@type opencode.Opts
-    vim.g.opencode_opts = {}
+    vim.g.opencode_opts = {
+      lsp = { enabled = true },
+      server = {
+        start = function()
+          require("snacks.terminal").open(opencode_cmd, snacks_terminal_opts)
+        end,
+        stop = function()
+          local term = require("snacks.terminal").get(opencode_cmd, snacks_terminal_opts)
+          if term then term:close() end
+        end,
+        toggle = function()
+          require("snacks.terminal").toggle(opencode_cmd, snacks_terminal_opts)
+        end,
+      },
+    }
 
     -- Required for opts.events.reload to pick up files opencode edits on disk.
     vim.o.autoread = true
@@ -35,7 +66,7 @@
           { "<leader>oa", mode = { "n", "x" } },
           { "<leader>oA", mode = "n" },
           { "<leader>os", mode = { "n", "x" } },
-          { "<leader>ot", mode = { "n", "t" } },
+          { "<leader>oo", mode = { "n", "t" } },
         },
         after = function()
           pcall(function()
