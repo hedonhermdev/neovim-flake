@@ -2,13 +2,15 @@
 
 {
   # opencode.nvim drives the `opencode` CLI from inside Neovim (replacing
-  # avante.nvim). It ships from nixpkgs as `opencode-nvim` (pname
-  # "opencode.nvim"), and the package propagates the `opencode` binary onto
-  # PATH. snacks.nvim is an optional-but-recommended integration that upgrades
+  # avante.nvim). It is built from the upstream github flake input
+  # (nickjvandyke/opencode.nvim) via our buildPlugin wrapper, exposed as
+  # `pkgs.neovimPlugins.opencode`. We deliberately do NOT bundle the `opencode`
+  # CLI: the user is expected to have `opencode` already on their PATH.
+  # snacks.nvim is an optional-but-recommended integration that upgrades
   # ask()/select() to snacks.input/snacks.picker; it is already provided by
   # ./snacks.nix, so the require('snacks') calls resolve at runtime.
-  vim.optPlugins = [
-    pkgs.vimPlugins.opencode-nvim
+  vim.optPlugins = with pkgs.neovimPlugins; [
+    opencode
   ];
 
   # opencode.nvim has no setup() — it reads `vim.g.opencode_opts` (an
@@ -57,11 +59,13 @@
   # `after` block — lz.n deletes its stub on trigger and then re-feeds the key,
   # so the mapping that actually runs opencode has to exist post-load. (Defining
   # them in luaConfigRC instead leaves the key dead after the stub self-deletes;
-  # this mirrors the flash.nix pattern.)
+  # this mirrors the flash.nix pattern.) The spec name must match the directory
+  # under pack/*/opt/, which equals the flake input attribute name ("opencode")
+  # since lib/buildPlugin.nix sets `pname` instead of `name`.
   vim.lazyPlugins = [
     ''
       {
-        "opencode.nvim",
+        "opencode",
         keys = {
           { "<leader>oa", mode = { "n", "x" } },
           { "<leader>oA", mode = "n" },

@@ -153,6 +153,11 @@
       url = "github:github/copilot.vim";
       flake = false;
     };
+
+    opencode = {
+      url = "github:nickjvandyke/opencode.nvim";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, ... }@inputs:
@@ -205,6 +210,10 @@
         "vimtex"
         { name = "render-markdown"; dependencies = [ "treesitter" ]; }
         { name = "copilot-vim"; requireCheck = [ ]; }
+        # opencode.nvim's optional integrations (snacks) are loaded via pcall,
+        # so pin the require-check to the top-level module to avoid pulling in
+        # packages we don't build from flake inputs.
+        { name = "opencode"; requireCheck = "opencode"; }
       ];
 
     in
