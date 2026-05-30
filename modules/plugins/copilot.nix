@@ -3,12 +3,8 @@
 {
   # Lazy-loaded on InsertEnter (FIXME #22). copilot.vim only provides inline
   # ghost-text suggestions while typing, so there's no reason to source it (and
-  # spawn its Node agent) during startup. avante uses `provider = "claude"`, and
-  # avante.setup() only loads the *claude* provider — it never requires the
-  # copilot provider (auto_suggestions_provider/memory_summary_provider both
-  # default to nil), and even avante's copilot provider reads its OAuth token
-  # from disk rather than from the copilot.vim runtime plugin. So the old
-  # "must be a start plugin for avante" rationale (FIXME #7) does not apply here.
+  # spawn its Node agent) during startup. It has no dependents that need it as a
+  # start plugin, so InsertEnter is the right trigger.
   vim.optPlugins = with pkgs.neovimPlugins; [
     copilot-vim
   ];

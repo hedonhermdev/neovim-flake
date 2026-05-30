@@ -159,6 +159,19 @@
     let
       supportedSystems = [ "aarch64-darwin" "aarch64-linux" "x86_64-linux" ];
       forAllSystems = f: nixpkgs.lib.genAttrs supportedSystems (system: f system);
+
+      # Per-system scope: import nixpkgs once (with the plugin overlay) and the
+      # neovimBuilder bound to it. All the system-keyed outputs below pull
+      # `pkgs` / `neovimBuilder` from here instead of re-importing nixpkgs.
+      pkgsFor = system: import nixpkgs {
+        inherit system;
+        config = { allowUnfree = true; };
+        # `pkgs` self-reference is lazy-safe: buildPluginOverlay only consumes
+        # the overlay's final/prev, never the top-level pkgs passed here.
+        overlays = [ (import ./lib { pkgs = pkgsFor system; inherit inputs plugins; }).buildPluginOverlay ];
+      };
+      neovimBuilderFor = pkgs: (import ./lib { inherit pkgs inputs plugins; }).neovimBuilder;
+
       plugins = [
         { name = "autopairs"; requireCheck = "nvim-autopairs"; }
         { name = "catppuccin"; requireCheck = "catppuccin"; }
@@ -191,40 +204,34 @@
         "vim-nix"
         "vimtex"
         { name = "render-markdown"; dependencies = [ "treesitter" ]; }
-        { name = "copilot-vim"; requireCheck = []; }
+        { name = "copilot-vim"; requireCheck = [ ]; }
       ];
 
     in
     {
       apps = forAllSystems (system:
         let
-          pkgs = import nixpkgs {
-            inherit system;
-            config = { allowUnfree = true; };
-            overlays = [ (import ./lib { inherit pkgs inputs plugins; }).buildPluginOverlay ];
-          };
-          neovimBuilder = (import ./lib { inherit pkgs inputs plugins; }).neovimBuilder;
+          pkgs = pkgsFor system;
+          neovimBuilder = neovimBuilderFor pkgs;
           nvim = {
             type = "app";
             program = "${neovimBuilder { config = {}; }}/bin/nvim";
           };
-        in {
+        in
+        {
           inherit nvim;
           default = nvim;
         });
 
       devShells = forAllSystems (system:
         let
-          pkgs = import nixpkgs {
-            inherit system;
-            config = { allowUnfree = true; };
-            overlays = [ (import ./lib { inherit pkgs inputs plugins; }).buildPluginOverlay ];
-          };
-          neovimBuilder = (import ./lib { inherit pkgs inputs plugins; }).neovimBuilder;
-        in {
+          pkgs = pkgsFor system;
+          neovimBuilder = neovimBuilderFor pkgs;
+        in
+        {
           default = pkgs.mkShell {
             buildInputs = [
-              (neovimBuilder { config = {}; })
+              (neovimBuilder { config = { }; })
               pkgs.lazygit
               pkgs.tree-sitter
             ];
@@ -233,13 +240,9 @@
 
       packages = forAllSystems (system:
         let
-          pkgs = import nixpkgs {
-            inherit system;
-            config = { allowUnfree = true; };
-            overlays = [ (import ./lib { inherit pkgs inputs plugins; }).buildPluginOverlay ];
-          };
-          neovimBuilder = (import ./lib { inherit pkgs inputs plugins; }).neovimBuilder;
-          nvimPacked = neovimBuilder { config = {}; };
+          pkgs = pkgsFor system;
+          neovimBuilder = neovimBuilderFor pkgs;
+          nvimPacked = neovimBuilder { config = { }; };
           # All language toolchains disabled — the lean core build (FIXME #19).
           # Demonstrates the closure-size win and is useful for headless/CI use.
           nvimMinimal = neovimBuilder {
@@ -256,7 +259,8 @@
               rust.enable = false;
             };
           };
-        in {
+        in
+        {
           inherit nvimPacked nvimMinimal;
           default = nvimPacked;
         });

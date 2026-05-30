@@ -45,7 +45,7 @@
     ./lualine.nix
     ./zen-mode.nix
     ./scnvim.nix
-    ./avante.nix
+    ./opencode.nix
     ./render-markdown.nix
     ./nvim-surround.nix
     ./which-key.nix

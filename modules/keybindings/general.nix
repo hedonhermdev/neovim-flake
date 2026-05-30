@@ -6,6 +6,8 @@
 
     -- I hate <ESC>
     vim.keymap.set("i", "jk", "<esc>")
+    -- ...and in terminal mode too (<C-\><C-n> leaves terminal mode)
+    vim.keymap.set("t", "jk", [[<C-\><C-n>]])
 
     -- Save your pinky
     vim.keymap.set("n", ";", ":")
@@ -25,9 +27,5 @@
     vim.keymap.set("n", "<M-k>", ":resize +2<CR>")
     vim.keymap.set("n", "<M-h>", ":vertical resize -2<CR>")
     vim.keymap.set("n", "<M-l>", ":vertical resize +2<CR>")
-
-    -- B for the beginning and E for the end of a line
-    vim.keymap.set("n", "B", "^")
-    vim.keymap.set("n", "E", "$")
   '';
 }

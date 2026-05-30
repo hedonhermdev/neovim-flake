@@ -8,11 +8,11 @@
     ''
       {
         "render-markdown",
-        ft = { "markdown", "Avante" },
+        ft = { "markdown" },
         after = function()
           pcall(function()
             require('render-markdown').setup({
-              file_types = { 'markdown', 'avante' },
+              file_types = { 'markdown' },
             })
           end)
         end,
