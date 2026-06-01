@@ -159,6 +159,11 @@
       flake = false;
     };
 
+    which-key = {
+      url = "github:folke/which-key.nvim";
+      flake = false;
+    };
+
     base46 = {
       url = "github:NvChad/base46/v3.0";
       flake = false;
@@ -223,6 +228,7 @@
         { name = "treesitter-context"; dependencies = [ "treesitter" ]; }
         "vim-nix"
         "vimtex"
+        { name = "which-key"; requireCheck = "which-key"; }
         { name = "render-markdown"; dependencies = [ "treesitter" ]; }
         { name = "copilot-vim"; requireCheck = [ ]; }
         # opencode.nvim's optional integrations (snacks) are loaded via pcall,

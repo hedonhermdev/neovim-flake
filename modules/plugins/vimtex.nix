@@ -5,13 +5,11 @@
     vimtex
   ];
 
-  vim.lazyPlugins = [
-    ''
-      {
-        "vimtex",
-        ft = { "tex", "latex", "plaintex" },
-      }
-    ''
+  vim.lazy = [
+    {
+      name = "vimtex";
+      ft = [ "tex" "latex" "plaintex" ];
+    }
   ];
 
   # Set early — vimtex reads this on load.

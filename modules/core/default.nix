@@ -45,9 +45,99 @@ in {
         List of lz.n plugin spec entries (each a Lua table literal as a
         string). lz-n.nix wraps them in `require('lz.n').load({ ... })` after
         all other config has been concatenated.
+
+        This is the raw escape hatch; prefer the structured `vim.lazy` option
+        below. Both are merged together by lz-n.nix.
       '';
       default = [];
       type = with types; listOf str;
+    };
+
+    lazy = mkOption {
+      description = ''
+        Structured lz.n plugin specs. Each entry is rendered to a Lua table
+        literal by lz-n.nix and handed to `require('lz.n').load`. Use this in
+        preference to the raw `lazyPlugins` strings; fall back to `lazyPlugins`
+        (or the `extraLua` field) only for spec shapes this option can't model.
+      '';
+      default = [];
+      type = with types; listOf (submodule ({ ... }: {
+        options = {
+          name = mkOption {
+            type = str;
+            description = "Plugin name (dir under pack/*/opt). Positional [1] in the lz.n spec.";
+          };
+          enabled = mkOption {
+            type = nullOr (either bool str);
+            default = null;
+            description = "bool, or raw Lua (e.g. a function/expression).";
+          };
+          priority = mkOption {
+            type = nullOr int;
+            default = null;
+          };
+          cmd = mkOption {
+            type = listOf str;
+            default = [];
+          };
+          ft = mkOption {
+            type = listOf str;
+            default = [];
+          };
+          event = mkOption {
+            type = listOf str;
+            default = [];
+          };
+          colorscheme = mkOption {
+            type = listOf str;
+            default = [];
+          };
+          keys = mkOption {
+            default = [];
+            description = "lz.n key triggers: bare strings, or structured { lhs, mode, rhs, desc, ft } entries.";
+            type = listOf (either str (submodule {
+              options = {
+                lhs = mkOption { type = str; };
+                mode = mkOption { type = listOf str; default = []; };
+                rhs = mkOption {
+                  type = nullOr str;
+                  default = null;
+                  description = "Raw Lua/string rhs; omit for trigger-only keys.";
+                };
+                desc = mkOption { type = nullOr str; default = null; };
+                ft = mkOption { type = listOf str; default = []; };
+              };
+            }));
+          };
+          beforeAll = mkOption {
+            type = nullOr lines;
+            default = null;
+            description = "Lua body wrapped as function() ... end.";
+          };
+          before = mkOption {
+            type = nullOr lines;
+            default = null;
+          };
+          load = mkOption {
+            type = nullOr lines;
+            default = null;
+          };
+          after = mkOption {
+            type = nullOr lines;
+            default = null;
+          };
+          safeAfter = mkOption {
+            type = bool;
+            default = true;
+            description = "Wrap the after body in pcall(function() ... end) — matches existing behavior.";
+          };
+          extraLua = mkOption {
+            type = nullOr lines;
+            default = null;
+            description = "Raw escape hatch: verbatim `key = value` table field(s), comma-joined into the spec.";
+          };
+        };
+      }));
     };
 
     vimAlias = mkOption {

@@ -17,35 +17,25 @@
       autopairs
   ];
 
-  vim.lazyPlugins = [
-    ''
-      {
-        "rustaceanvim",
-        ft = "rust",
-      }
-    ''
-    ''
-      {
-        "outline",
-        cmd = { "Outline", "OutlineOpen", "OutlineClose", "OutlineToggle" },
-        after = function()
-          pcall(function()
-            require('outline').setup()
-          end)
-        end,
-      }
-    ''
-    ''
-      {
-        "autopairs",
-        event = "InsertEnter",
-        after = function()
-          pcall(function()
-            require('nvim-autopairs').setup()
-          end)
-        end,
-      }
-    ''
+  vim.lazy = [
+    {
+      name = "rustaceanvim";
+      ft = [ "rust" ];
+    }
+    {
+      name = "outline";
+      cmd = [ "Outline" "OutlineOpen" "OutlineClose" "OutlineToggle" ];
+      after = ''
+        require('outline').setup()
+      '';
+    }
+    {
+      name = "autopairs";
+      event = [ "InsertEnter" ];
+      after = ''
+        require('nvim-autopairs').setup()
+      '';
+    }
   ];
 
   vim.luaConfigRC = ''

@@ -5,17 +5,11 @@
     numb
   ];
 
-  vim.lazyPlugins = [
-    ''
-      {
-        "numb",
-        event = "DeferredUIEnter",
-        after = function()
-          pcall(function()
-            ${builtins.readFile ./numb.lua}
-          end)
-        end,
-      }
-    ''
+  vim.lazy = [
+    {
+      name = "numb";
+      event = [ "DeferredUIEnter" ];
+      after = builtins.readFile ./numb.lua;
+    }
   ];
 }

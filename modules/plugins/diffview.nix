@@ -5,19 +5,15 @@
     pkgs.vimPlugins.diffview-nvim
   ];
 
-  vim.lazyPlugins = [
-    ''
-      {
-        "diffview.nvim",
-        cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewFileHistory", "DiffviewToggleFiles", "DiffviewFocusFiles", "DiffviewRefresh" },
-        keys = { "<leader>gd", "<leader>gD", "<leader>gh" },
-        after = function()
-          pcall(function()
-            require('diffview').setup({})
-          end)
-        end,
-      }
-    ''
+  vim.lazy = [
+    {
+      name = "diffview.nvim";
+      cmd = [ "DiffviewOpen" "DiffviewClose" "DiffviewFileHistory" "DiffviewToggleFiles" "DiffviewFocusFiles" "DiffviewRefresh" ];
+      keys = [ "<leader>gd" "<leader>gD" "<leader>gh" ];
+      after = ''
+        require('diffview').setup({})
+      '';
+    }
   ];
 
   vim.luaConfigRC = ''

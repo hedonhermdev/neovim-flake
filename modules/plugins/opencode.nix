@@ -62,30 +62,26 @@
   # this mirrors the flash.nix pattern.) The spec name must match the directory
   # under pack/*/opt/, which equals the flake input attribute name ("opencode")
   # since lib/buildPlugin.nix sets `pname` instead of `name`.
-  vim.lazyPlugins = [
-    ''
-      {
-        "opencode",
-        keys = {
-          { "<leader>oa", mode = { "n", "x" } },
-          { "<leader>oA", mode = "n" },
-          { "<leader>os", mode = { "n", "x" } },
-          { "<leader>oo", mode = { "n", "t" } },
-        },
-        after = function()
-          pcall(function()
-            local opencode = require("opencode")
-            vim.keymap.set({ "n", "x" }, "<leader>oa", function() opencode.ask("@this: ", { submit = true }) end,
-              { silent = true, desc = "opencode: ask about this" })
-            vim.keymap.set("n", "<leader>oA", function() opencode.ask() end,
-              { silent = true, desc = "opencode: ask" })
-            vim.keymap.set({ "n", "x" }, "<leader>os", function() opencode.select() end,
-              { silent = true, desc = "opencode: select prompt" })
-            vim.keymap.set({ "n", "t" }, "<leader>oo", function() opencode.toggle() end,
-              { silent = true, desc = "opencode: toggle window" })
-          end)
-        end,
-      }
-    ''
+  vim.lazy = [
+    {
+      name = "opencode";
+      keys = [
+        { lhs = "<leader>oa"; mode = [ "n" "x" ]; }
+        { lhs = "<leader>oA"; mode = [ "n" ]; }
+        { lhs = "<leader>os"; mode = [ "n" "x" ]; }
+        { lhs = "<leader>oo"; mode = [ "n" "t" ]; }
+      ];
+      after = ''
+        local opencode = require("opencode")
+        vim.keymap.set({ "n", "x" }, "<leader>oa", function() opencode.ask("@this: ", { submit = true }) end,
+          { silent = true, desc = "opencode: ask about this" })
+        vim.keymap.set("n", "<leader>oA", function() opencode.ask() end,
+          { silent = true, desc = "opencode: ask" })
+        vim.keymap.set({ "n", "x" }, "<leader>os", function() opencode.select() end,
+          { silent = true, desc = "opencode: select prompt" })
+        vim.keymap.set({ "n", "t" }, "<leader>oo", function() opencode.toggle() end,
+          { silent = true, desc = "opencode: toggle window" })
+      '';
+    }
   ];
 }

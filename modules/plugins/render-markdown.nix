@@ -4,19 +4,15 @@
     render-markdown
   ];
 
-  vim.lazyPlugins = [
-    ''
-      {
-        "render-markdown",
-        ft = { "markdown" },
-        after = function()
-          pcall(function()
-            require('render-markdown').setup({
-              file_types = { 'markdown' },
-            })
-          end)
-        end,
-      }
-    ''
+  vim.lazy = [
+    {
+      name = "render-markdown";
+      ft = [ "markdown" ];
+      after = ''
+        require('render-markdown').setup({
+          file_types = { 'markdown' },
+        })
+      '';
+    }
   ];
 }

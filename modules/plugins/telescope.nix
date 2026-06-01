@@ -10,43 +10,39 @@
   # input attribute name ("telescope") since lib/buildPlugin.nix sets
   # `pname` instead of `name` (avoiding the `vimplugin-` prefix that
   # vimUtils.buildVimPlugin would otherwise add).
-  vim.lazyPlugins = [
-    ''
-      {
-        "telescope",
-        cmd = "Telescope",
-        after = function()
-          pcall(function()
-            -- rg/fd are provided on nvim's PATH by lib/neovimBuilder.nix
-            -- (corePackages), which is the single source for these binaries
-            -- (FIXME #20). Reference them by bare name rather than
-            -- re-interpolating their nix-store paths here.
-            require("telescope").setup {
-              defaults = {
-                vimgrep_arguments = {
-                  "rg",
-                  "--color=never",
-                  "--no-heading",
-                  "--with-filename",
-                  "--line-number",
-                  "--column",
-                  "--smart-case",
-                },
+  vim.lazy = [
+    {
+      name = "telescope";
+      cmd = [ "Telescope" ];
+      after = ''
+        -- rg/fd are provided on nvim's PATH by lib/neovimBuilder.nix
+        -- (corePackages), which is the single source for these binaries
+        -- (FIXME #20). Reference them by bare name rather than
+        -- re-interpolating their nix-store paths here.
+        require("telescope").setup {
+          defaults = {
+            vimgrep_arguments = {
+              "rg",
+              "--color=never",
+              "--no-heading",
+              "--with-filename",
+              "--line-number",
+              "--column",
+              "--smart-case",
+            },
+          },
+          pickers = {
+            find_files = {
+              find_command = {
+                "fd",
+                "--type",
+                "f",
               },
-              pickers = {
-                find_files = {
-                  find_command = {
-                    "fd",
-                    "--type",
-                    "f",
-                  },
-                },
-              },
-            }
-          end)
-        end,
-      }
-    ''
+            },
+          },
+        }
+      '';
+    }
   ];
 
   vim.nnoremap = {

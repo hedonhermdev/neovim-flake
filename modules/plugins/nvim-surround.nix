@@ -5,17 +5,13 @@
     pkgs.vimPlugins.nvim-surround
   ];
 
-  vim.lazyPlugins = [
-    ''
-      {
-        "nvim-surround",
-        event = "DeferredUIEnter",
-        after = function()
-          pcall(function()
-            require('nvim-surround').setup({})
-          end)
-        end,
-      }
-    ''
+  vim.lazy = [
+    {
+      name = "nvim-surround";
+      event = [ "DeferredUIEnter" ];
+      after = ''
+        require('nvim-surround').setup({})
+      '';
+    }
   ];
 }

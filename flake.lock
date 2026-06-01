@@ -454,7 +454,8 @@
         "treesitter-textobjects": "treesitter-textobjects",
         "vim-nix": "vim-nix",
         "vimtex": "vimtex",
-        "volt": "volt"
+        "volt": "volt",
+        "which-key": "which-key"
       }
     },
     "rustaceanvim": {
@@ -602,6 +603,22 @@
       "original": {
         "owner": "NvChad",
         "repo": "volt",
+        "type": "github"
+      }
+    },
+    "which-key": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1761664528,
+        "narHash": "sha256-rKaYnXM4gRkkF/+xIFm2oCZwtAU6CeTdRWU93N+Jmbc=",
+        "owner": "folke",
+        "repo": "which-key.nvim",
+        "rev": "3aab2147e74890957785941f0c1ad87d0a44c15a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "folke",
+        "repo": "which-key.nvim",
         "type": "github"
       }
     }

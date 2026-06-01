@@ -5,17 +5,13 @@
     indent-blankline
   ];
 
-  vim.lazyPlugins = [
-    ''
-      {
-        "indent-blankline",
-        event = "DeferredUIEnter",
-        after = function()
-          pcall(function()
-            require("ibl").setup({})
-          end)
-        end,
-      }
-    ''
+  vim.lazy = [
+    {
+      name = "indent-blankline";
+      event = [ "DeferredUIEnter" ];
+      after = ''
+        require("ibl").setup({})
+      '';
+    }
   ];
 }

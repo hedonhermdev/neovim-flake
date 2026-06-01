@@ -5,19 +5,15 @@
     pkgs.vimPlugins.neogit
   ];
 
-  vim.lazyPlugins = [
-    ''
-      {
-        "neogit",
-        cmd = "Neogit",
-        keys = { "<leader>gn" },
-        after = function()
-          pcall(function()
-            require('neogit').setup({})
-          end)
-        end,
-      }
-    ''
+  vim.lazy = [
+    {
+      name = "neogit";
+      cmd = [ "Neogit" ];
+      keys = [ "<leader>gn" ];
+      after = ''
+        require('neogit').setup({})
+      '';
+    }
   ];
 
   vim.luaConfigRC = ''

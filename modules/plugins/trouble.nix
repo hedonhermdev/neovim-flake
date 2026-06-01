@@ -5,19 +5,15 @@
     pkgs.vimPlugins.trouble-nvim
   ];
 
-  vim.lazyPlugins = [
-    ''
-      {
-        "trouble.nvim",
-        cmd = { "Trouble", "TroubleToggle", "TroubleClose", "TroubleRefresh" },
-        keys = { "<leader>xx", "<leader>xX", "<leader>xs", "<leader>xl", "<leader>xL", "<leader>xq" },
-        after = function()
-          pcall(function()
-            require('trouble').setup({})
-          end)
-        end,
-      }
-    ''
+  vim.lazy = [
+    {
+      name = "trouble.nvim";
+      cmd = [ "Trouble" "TroubleToggle" "TroubleClose" "TroubleRefresh" ];
+      keys = [ "<leader>xx" "<leader>xX" "<leader>xs" "<leader>xl" "<leader>xL" "<leader>xq" ];
+      after = ''
+        require('trouble').setup({})
+      '';
+    }
   ];
 
   vim.luaConfigRC = ''

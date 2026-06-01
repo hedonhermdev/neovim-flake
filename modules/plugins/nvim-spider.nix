@@ -5,21 +5,15 @@
     pkgs.vimPlugins.nvim-spider
   ];
 
-  vim.lazyPlugins = [
-    ''
-      {
-        "nvim-spider",
-        keys = {
-          { "w", mode = { "n", "o", "x" } },
-          { "e", mode = { "n", "o", "x" } },
-          { "b", mode = { "n", "o", "x" } },
-        },
-        after = function()
-          pcall(function()
-            ${builtins.readFile ./nvim-spider.lua}
-          end)
-        end,
-      }
-    ''
+  vim.lazy = [
+    {
+      name = "nvim-spider";
+      keys = [
+        { lhs = "w"; mode = [ "n" "o" "x" ]; }
+        { lhs = "e"; mode = [ "n" "o" "x" ]; }
+        { lhs = "b"; mode = [ "n" "o" "x" ]; }
+      ];
+      after = builtins.readFile ./nvim-spider.lua;
+    }
   ];
 }

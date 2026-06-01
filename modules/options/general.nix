@@ -23,6 +23,11 @@ in {
 
     vim.opt.cursorline = true -- Highlight the current line
 
+    -- Blank out the `~` end-of-buffer markers shown on lines past the last
+    -- line. :append (not `= {...}`) so we only set `eob` and preserve the
+    -- fold/diff/vert fillchars set elsewhere (e.g. modules/options/fold.nix).
+    vim.opt.fillchars:append({ eob = " " })
+
     vim.opt.showmode = false -- don't need to see -- INSERT --
 
     -- Enable 24-bit RGB color in the terminal UI

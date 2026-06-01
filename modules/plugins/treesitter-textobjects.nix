@@ -5,17 +5,11 @@
     treesitter-textobjects
   ];
 
-  vim.lazyPlugins = [
-    ''
-      {
-        "treesitter-textobjects",
-        event = { "BufReadPre", "BufNewFile" },
-        after = function()
-          pcall(function()
-            ${builtins.readFile ./treesitter-textobjects.lua}
-          end)
-        end,
-      }
-    ''
+  vim.lazy = [
+    {
+      name = "treesitter-textobjects";
+      event = [ "BufReadPre" "BufNewFile" ];
+      after = builtins.readFile ./treesitter-textobjects.lua;
+    }
   ];
 }

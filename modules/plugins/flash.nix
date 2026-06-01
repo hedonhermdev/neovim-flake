@@ -5,23 +5,17 @@
     pkgs.vimPlugins.flash-nvim
   ];
 
-  vim.lazyPlugins = [
-    ''
-      {
-        "flash.nvim",
-        keys = {
-          { "s", mode = { "n", "x", "o" } },
-          { "S", mode = { "n", "x", "o" } },
-          { "r", mode = "o" },
-          { "R", mode = { "x", "o" } },
-          { "<C-s>", mode = "c" },
-        },
-        after = function()
-          pcall(function()
-            ${builtins.readFile ./flash.lua}
-          end)
-        end,
-      }
-    ''
+  vim.lazy = [
+    {
+      name = "flash.nvim";
+      keys = [
+        { lhs = "s"; mode = [ "n" "x" "o" ]; }
+        { lhs = "S"; mode = [ "n" "x" "o" ]; }
+        { lhs = "r"; mode = [ "o" ]; }
+        { lhs = "R"; mode = [ "x" "o" ]; }
+        { lhs = "<C-s>"; mode = [ "c" ]; }
+      ];
+      after = builtins.readFile ./flash.lua;
+    }
   ];
 }

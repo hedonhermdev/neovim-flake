@@ -5,19 +5,15 @@
     pkgs.vimPlugins.zen-mode-nvim
   ];
 
-  vim.lazyPlugins = [
-    ''
-      {
-        "zen-mode.nvim",
-        cmd = "ZenMode",
-        keys = { "<leader>zf" },
-        after = function()
-          pcall(function()
-            require('zen-mode').setup({})
-          end)
-        end,
-      }
-    ''
+  vim.lazy = [
+    {
+      name = "zen-mode.nvim";
+      cmd = [ "ZenMode" ];
+      keys = [ "<leader>zf" ];
+      after = ''
+        require('zen-mode').setup({})
+      '';
+    }
   ];
 
   vim.nmap = {

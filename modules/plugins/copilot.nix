@@ -31,12 +31,10 @@
     })
   '';
 
-  vim.lazyPlugins = [
-    ''
-      {
-        "copilot-vim",
-        event = "InsertEnter",
-      }
-    ''
+  vim.lazy = [
+    {
+      name = "copilot-vim";
+      event = [ "InsertEnter" ];
+    }
   ];
 }

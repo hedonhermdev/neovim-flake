@@ -5,18 +5,12 @@
     pkgs.vimPlugins.nvim-lint
   ];
 
-  vim.lazyPlugins = [
-    ''
-      {
-        "nvim-lint",
-        event = { "BufReadPre", "BufNewFile" },
-        cmd = "LintTrigger",
-        after = function()
-          pcall(function()
-            ${builtins.readFile ./nvim-lint.lua}
-          end)
-        end,
-      }
-    ''
+  vim.lazy = [
+    {
+      name = "nvim-lint";
+      event = [ "BufReadPre" "BufNewFile" ];
+      cmd = [ "LintTrigger" ];
+      after = builtins.readFile ./nvim-lint.lua;
+    }
   ];
 }

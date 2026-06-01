@@ -5,17 +5,13 @@
     pkgs.vimPlugins.fidget-nvim
   ];
 
-  vim.lazyPlugins = [
-    ''
-      {
-        "fidget.nvim",
-        event = "DeferredUIEnter",
-        after = function()
-          pcall(function()
-            require('fidget').setup({})
-          end)
-        end,
-      }
-    ''
+  vim.lazy = [
+    {
+      name = "fidget.nvim";
+      event = [ "DeferredUIEnter" ];
+      after = ''
+        require('fidget').setup({})
+      '';
+    }
   ];
 }
