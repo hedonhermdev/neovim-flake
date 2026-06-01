@@ -28,13 +28,11 @@
   # catppuccin as the sole theme authority — do not run both.
   vim.luaConfigRC = lib.mkOrder 100 ''
     -- chadrc: user overrides merged over nvchad-ui's nvconfig defaults.
-    -- Kept minimal for the Phase 0 spike; expanded in chadrc.lua (Phase 1).
+    -- Registered as a loaded module so `require "chadrc"` (from nvconfig and
+    -- from base46's toggle_theme/transparency) resolves without writing a file
+    -- onto the read-only store rtp.
     package.preload["chadrc"] = function()
-      return {
-        base46 = {
-          theme = "onedark",
-        },
-      }
+      ${lib.replaceStrings ["\n"] ["\n      "] (builtins.readFile ./chadrc.lua)}
     end
 
     vim.g.base46_cache = vim.fn.stdpath("data") .. "/base46/"

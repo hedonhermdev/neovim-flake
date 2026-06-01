@@ -29,16 +29,15 @@
   imports = [
     ./treesitter.nix
     ./base46.nix
+    ./nvchad-ui.nix
     ./indent-blankline.nix
     ./telescope.nix
-    ./cokeline.nix
     ./treesitter-context.nix
     ./nvim-tree.nix
     ./git.nix
     ./numb.nix
     ./lsp.nix
     ./snacks.nix
-    ./lualine.nix
     ./zen-mode.nix
     ./scnvim.nix
     ./opencode.nix
