@@ -158,6 +158,21 @@
       url = "github:nickjvandyke/opencode.nvim";
       flake = false;
     };
+
+    base46 = {
+      url = "github:NvChad/base46/v3.0";
+      flake = false;
+    };
+
+    nvchad-ui = {
+      url = "github:NvChad/ui/v3.0";
+      flake = false;
+    };
+
+    volt = {
+      url = "github:NvChad/volt";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, ... }@inputs:
@@ -214,6 +229,22 @@
         # so pin the require-check to the top-level module to avoid pulling in
         # packages we don't build from flake inputs.
         { name = "opencode"; requireCheck = "opencode"; }
+
+        # NvChad theming + UI stack. base46 compiles its highlight cache to
+        # stdpath("data") at runtime (Strategy 1), so no build step here. ui
+        # transitively touches mason/cmp integration modules, so pin the
+        # require-check to the top-level "nvchad" module (same trap as opencode).
+        # volt is needed for the interactive theme picker / nvcheatsheet floats.
+        # base46's top-level module (base46/init.lua line 3) does
+        # `require("nvconfig")`, but nvconfig ships in nvchad-ui — and base46
+        # can't depend on ui (ui already depends on base46 → cycle). An empty
+        # requireCheck triggers auto-discovery (which would re-hit init), so
+        # pin the check to `base46.colors`: a self-contained leaf module (pure
+        # color math, no requires) that still proves the plugin loads. Runtime
+        # is covered by pcall(load_all_highlights) in base46.nix.
+        { name = "base46"; requireCheck = "base46.colors"; }
+        { name = "volt"; requireCheck = "volt"; }
+        { name = "nvchad-ui"; dependencies = [ "base46" "volt" "plenary" "devicons" ]; requireCheck = "nvchad"; }
       ];
 
     in

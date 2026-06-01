@@ -16,6 +16,23 @@
         "type": "github"
       }
     },
+    "base46": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1768574351,
+        "narHash": "sha256-AUdBZbGcPDtixHMFms9Y0EyUdAXOzvcA2AbrRdYQ4ig=",
+        "owner": "NvChad",
+        "repo": "base46",
+        "rev": "884b990dcdbe07520a0892da6ba3e8d202b46337",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NvChad",
+        "ref": "v3.0",
+        "repo": "base46",
+        "type": "github"
+      }
+    },
     "blink-cmp": {
       "flake": false,
       "locked": {
@@ -304,6 +321,23 @@
         "type": "github"
       }
     },
+    "nvchad-ui": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1778434603,
+        "narHash": "sha256-bl2erzyZCZp9seb4E7o/SFsBUHwocVOmQNv0mbO5yR0=",
+        "owner": "NvChad",
+        "repo": "ui",
+        "rev": "3e67e9d5325fd47fdbc90ca00a147db2f3525754",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NvChad",
+        "ref": "v3.0",
+        "repo": "ui",
+        "type": "github"
+      }
+    },
     "nvim-tree": {
       "flake": false,
       "locked": {
@@ -387,6 +421,7 @@
     "root": {
       "inputs": {
         "autopairs": "autopairs",
+        "base46": "base46",
         "blink-cmp": "blink-cmp",
         "blink-lib": "blink-lib",
         "catppuccin": "catppuccin",
@@ -405,6 +440,7 @@
         "move": "move",
         "nixpkgs": "nixpkgs",
         "numb": "numb",
+        "nvchad-ui": "nvchad-ui",
         "nvim-tree": "nvim-tree",
         "opencode": "opencode",
         "outline": "outline",
@@ -417,7 +453,8 @@
         "treesitter-context": "treesitter-context",
         "treesitter-textobjects": "treesitter-textobjects",
         "vim-nix": "vim-nix",
-        "vimtex": "vimtex"
+        "vimtex": "vimtex",
+        "volt": "volt"
       }
     },
     "rustaceanvim": {
@@ -549,6 +586,22 @@
       "original": {
         "owner": "lervag",
         "repo": "vimtex",
+        "type": "github"
+      }
+    },
+    "volt": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1757754135,
+        "narHash": "sha256-5Xao1+QXZOvqwCXL6zWpckJPO1LDb8I7wtikMRFQ3Jk=",
+        "owner": "NvChad",
+        "repo": "volt",
+        "rev": "620de1321f275ec9d80028c68d1b88b409c0c8b1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NvChad",
+        "repo": "volt",
         "type": "github"
       }
     }

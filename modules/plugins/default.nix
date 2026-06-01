@@ -15,24 +15,20 @@
 
   # Register lz.n triggers for the optPlugins listed above. (move has
   # its own dedicated module, so its trigger lives there.)
-  vim.lazyPlugins = [
-    ''
-      {
-        "vim-nix",
-        ft = "nix",
-      }
-    ''
-    ''
-      {
-        "fugitive",
-        cmd = { "G", "Git", "Gdiffsplit", "Gvdiffsplit", "Gread", "Gwrite", "Gedit", "Gblame", "Glog" },
-      }
-    ''
+  vim.lazy = [
+    {
+      name = "vim-nix";
+      ft = [ "nix" ];
+    }
+    {
+      name = "fugitive";
+      cmd = [ "G" "Git" "Gdiffsplit" "Gvdiffsplit" "Gread" "Gwrite" "Gedit" "Gblame" "Glog" ];
+    }
   ];
 
   imports = [
     ./treesitter.nix
-    ./catppuccin.nix
+    ./base46.nix
     ./indent-blankline.nix
     ./telescope.nix
     ./cokeline.nix
