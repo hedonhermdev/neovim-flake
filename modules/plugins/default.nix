@@ -43,10 +43,8 @@
     ./opencode.nix
     ./render-markdown.nix
     ./nvim-surround.nix
-    ./which-key.nix
     ./fidget.nix
     ./trouble.nix
-    ./inc-rename.nix
     ./lsp-lines.nix
     ./conform.nix
     ./nvim-lint.nix

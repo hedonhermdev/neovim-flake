@@ -22,4 +22,30 @@
       '';
     }
   ];
+
+  # Keybinds for nvchad UI features that replace retired plugins. These call
+  # into nvchad modules that the plugin (already on the rtp via base46.nix)
+  # exposes; guarded require so a key press can't error if the module moved.
+  vim.luaConfigRC = ''
+    -- LSP rename -> nvchad renamer (replaces inc-rename). Floating prompt
+    -- prefilled with the symbol under the cursor.
+    vim.keymap.set("n", "<leader>rn", function()
+      require("nvchad.lsp.renamer")()
+    end, { silent = true, desc = "LSP rename (nvchad)" })
+
+    -- Terminal toggle -> nvchad term (replaces snacks.terminal). A single
+    -- horizontal toggle term, persistent by id.
+    vim.keymap.set({ "n", "t" }, "<A-i>", function()
+      require("nvchad.term").toggle({ pos = "sp", id = "htoggleTerm" })
+    end, { silent = true, desc = "Toggle terminal (nvchad)" })
+
+    -- Theme picker (volt-backed). Live-switches and recompiles base46's cache.
+    vim.keymap.set("n", "<leader>th", function()
+      require("nvchad.themes").open()
+    end, { silent = true, desc = "Theme picker" })
+
+    -- Mappings cheatsheet (replaces which-key's discovery role; static grid).
+    vim.keymap.set("n", "<leader>ch", "<cmd>NvCheatsheet<CR>",
+      { silent = true, desc = "Cheatsheet" })
+  '';
 }
