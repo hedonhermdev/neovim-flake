@@ -20,6 +20,28 @@ return {
       enabled = true,
       theme = "default", -- default/vscode/vscode_colored/minimal
       separator_style = "default",
+
+      -- Re-add opencode's live status (working/idle, etc) to the statusline.
+      -- This lived in the retired lualine config (lualine_x); nvchad's
+      -- statusline has no knowledge of it, so we register it as a custom
+      -- module and splice it into the module order. Guarded require so the
+      -- statusline can't error if the opencode module isn't resolvable;
+      -- returns "" when unavailable (and we drop the segment entirely so
+      -- there's no empty highlight box).
+      modules = {
+        opencode = function()
+          local ok, opencode = pcall(require, "opencode")
+          if not ok then return "" end
+          local s = opencode.statusline()
+          if s == nil or s == "" then return "" end
+          return "%#St_Lsp# " .. s .. " "
+        end,
+      },
+      -- Default order is
+      --   { "mode", "file", "git", "%=", "lsp_msg", "%=", "diagnostics", "lsp", "cwd", "cursor" }
+      -- Insert opencode on the right, just before the lsp segment (matching
+      -- its old right-aligned position next to encoding/filetype in lualine).
+      order = { "mode", "file", "git", "%=", "lsp_msg", "%=", "diagnostics", "opencode", "lsp", "cwd", "cursor" },
     },
     tabufline = {
       enabled = true,
