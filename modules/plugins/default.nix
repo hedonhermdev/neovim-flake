@@ -46,7 +46,6 @@
     ./which-key.nix
     ./fidget.nix
     ./trouble.nix
-    ./lsp-lines.nix
     ./conform.nix
     ./nvim-lint.nix
     ./flash.nix

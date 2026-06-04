@@ -39,6 +39,12 @@
   ];
 
   vim.luaConfigRC = ''
+    -- Diagnostic display config, seeded at STARTUP so the first file paints in
+    -- its final form (virtual_text on, virtual_lines off) with no flicker.
+    -- virtual_lines is a native Neovim 0.11+ feature, so the toggle below needs
+    -- no extra plugin (this config already uses the 0.11 vim.lsp.config API).
+    vim.diagnostic.config({ virtual_lines = false, virtual_text = true })
+
     -- Set up blink.cmp (replacement for nvim-cmp).
     local luasnip = require('luasnip')
     -- Defer the friendly-snippets vscode loader off the startup path (FIXME #12):
@@ -215,4 +221,10 @@
       end,
     })
   '';
+
+  # Toggle between inline virtual text and full virtual_lines diagnostics,
+  # inlined as a `<cmd>lua ...<CR>` string rhs through the Nix mapping option.
+  vim.nnoremap = {
+    "<leader>xv" = "<cmd>lua local c = vim.diagnostic.config() or {}; local e = not c.virtual_lines; vim.diagnostic.config({ virtual_lines = e, virtual_text = not e })<CR>";
+  };
 }

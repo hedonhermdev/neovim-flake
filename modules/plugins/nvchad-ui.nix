@@ -35,9 +35,31 @@
 
     -- Terminal toggle -> nvchad term (replaces snacks.terminal). A single
     -- horizontal toggle term, persistent by id.
-    vim.keymap.set({ "n", "t" }, "<A-i>", function()
+    vim.keymap.set({ "n", "t" }, "<leader>ft", function()
       require("nvchad.term").toggle({ pos = "sp", id = "htoggleTerm" })
     end, { silent = true, desc = "Toggle terminal (nvchad)" })
+
+    -- :Floatterm -> toggle a floating nvchad terminal (separate id from the
+    -- split toggle above, so the two don't share a buffer/window).
+    vim.api.nvim_create_user_command("Floatterm", function()
+      require("nvchad.term").toggle({ pos = "float", id = "floatTerm" })
+    end, { desc = "Toggle floating terminal (nvchad)" })
+
+    -- <Esc> in any nvchad terminal hides it (closes the window; the shell job
+    -- stays alive and is restored on the next toggle, exactly like nvchad's own
+    -- toggle which does nvim_win_close(win, true)). nvchad tags every terminal
+    -- buffer with filetype "NvTerm_<pos>" (float/sp/vsp), so one FileType
+    -- pattern covers the floatterm and the split toggle term alike. Mapping is
+    -- buffer-local so <Esc> keeps its normal meaning everywhere else.
+    vim.api.nvim_create_autocmd("FileType", {
+      group = vim.api.nvim_create_augroup("NvTermEscClose", { clear = true }),
+      pattern = "NvTerm_*",
+      callback = function(args)
+        vim.keymap.set("t", "<Esc>", function()
+          vim.api.nvim_win_close(0, false)
+        end, { buffer = args.buf, silent = true, desc = "Hide terminal" })
+      end,
+    })
 
     -- Theme picker (volt-backed). Live-switches and recompiles base46's cache.
     vim.keymap.set("n", "<leader>th", function()
