@@ -1,20 +1,20 @@
-{ config, pkgs, lib, ... }:
+{ pkgs, ... }:
 
 {
   vim.startPlugins = with pkgs.neovimPlugins; [
-      lspconfig
-      lspkind
-      lsp_signature
-      blink-cmp
-      blink-lib
-      luasnip
-      friendly-snippets
+    lspconfig
+    lspkind
+    lsp_signature
+    blink-cmp
+    blink-lib
+    luasnip
+    friendly-snippets
   ];
 
   vim.optPlugins = with pkgs.neovimPlugins; [
-      rustaceanvim
-      outline
-      autopairs
+    rustaceanvim
+    outline
+    autopairs
   ];
 
   vim.lazy = [
@@ -24,7 +24,12 @@
     }
     {
       name = "outline";
-      cmd = [ "Outline" "OutlineOpen" "OutlineClose" "OutlineToggle" ];
+      cmd = [
+        "Outline"
+        "OutlineOpen"
+        "OutlineClose"
+        "OutlineToggle"
+      ];
       after = ''
         require('outline').setup()
       '';
@@ -39,18 +44,8 @@
   ];
 
   vim.luaConfigRC = ''
-    -- Diagnostic display config, seeded at STARTUP so the first file paints in
-    -- its final form (virtual_text on, virtual_lines off) with no flicker.
-    -- virtual_lines is a native Neovim 0.11+ feature, so the toggle below needs
-    -- no extra plugin (this config already uses the 0.11 vim.lsp.config API).
-    vim.diagnostic.config({ virtual_lines = false, virtual_text = true })
+    vim.diagnostic.config({ virtual_lines = false, virtual_text = false })
 
-    -- Set up blink.cmp (replacement for nvim-cmp).
-    local luasnip = require('luasnip')
-    -- Defer the friendly-snippets vscode loader off the startup path (FIXME #12):
-    -- lazy_load() walks ~500 friendly-snippets files, which delayed first UI
-    -- paint when run inline. vim.schedule runs it after the editor has painted
-    -- (and long before any completion/snippet expansion needs the snippets).
     vim.schedule(function()
       require("luasnip.loaders.from_vscode").lazy_load()
     end)
@@ -65,6 +60,8 @@
         ['<CR>']      = { 'accept', 'fallback' },
         ['<Tab>']     = { 'select_next', 'snippet_forward', 'fallback' },
         ['<S-Tab>']   = { 'select_prev', 'snippet_backward', 'fallback' },
+        ['<C-n>']     = { 'select_next', 'snippet_forward', 'fallback' },
+        ['<C-p>']   = { 'select_prev', 'snippet_backward', 'fallback' },
       },
 
       snippets = { preset = 'luasnip' },
@@ -89,13 +86,6 @@
 
     local capabilities = require('blink.cmp').get_lsp_capabilities()
 
-    -- Migrated to the vim.lsp.config / vim.lsp.enable API (Neovim 0.11+).
-    -- The old `require('lspconfig').<server>.setup{}` framework is
-    -- deprecated and will be removed in nvim-lspconfig v3.0.0.
-    -- nvim-lspconfig still ships per-server config files under
-    -- `lsp/<server>.lua` on the runtimepath, which vim.lsp.config picks
-    -- up automatically; we only override fields we care about here.
-
     vim.lsp.config('*', {
       capabilities = capabilities,
     })
@@ -110,43 +100,40 @@
       workspace_required = true,
     })
 
-    -- Pyright: prefer the active virtualenv's interpreter. Use the
-    -- unresolved `$VIRTUAL_ENV/bin/python` path so Pyright can find the
-    -- venv's `pyvenv.cfg` (resolving the symlink hands it the base
-    -- interpreter and Pyright stops seeing the venv's site-packages).
-    local function pyright_python_path()
-      local venv = os.getenv("VIRTUAL_ENV")
-      if venv and venv ~= "" then
-        return venv .. "/bin/python"
-      end
-      return vim.fn.exepath("python3")
-    end
-
-    vim.lsp.config('pyright', {
+    vim.lsp.config('basedpyright', {
       settings = {
-        python = {
+        basedpyright = {
+          disableOrganizeImports = true,
           analysis = {
-            autoSearchPaths = true,
-            useLibraryCodeForTypes = true,
+            ignore = { '*' },
+            -- "off" is NOT a valid diagnosticMode (only "openFilesOnly" /
+            -- "workspace"); typeCheckingMode = "off" is the real off switch.
             diagnosticMode = "openFilesOnly",
+            typeCheckingMode = "off",
           },
         },
       },
-      -- The interpreter path is set solely here (FIXME #16): before_init
-      -- re-evaluates VIRTUAL_ENV at LSP-init time, so it picks up a venv
-      -- activated after config eval. A duplicate static settings entry would be
-      -- captured once at startup and could go stale, so it was removed.
-      before_init = function(_, config)
-        config.settings.python.pythonPath = pyright_python_path()
-      end,
     })
 
-    -- Ruff: linting + import sorting + (optional) formatting via LSP.
-    -- Disable hover so Pyright owns hover/type info; ruff owns diagnostics.
-    vim.lsp.config('ruff', {
-      on_attach = function(client, _)
-        client.server_capabilities.hoverProvider = false
+    vim.lsp.config('ruff', {})
+
+    vim.api.nvim_create_autocmd("LspAttach", {
+      group = vim.api.nvim_create_augroup('lsp_attach_disable_ruff_hover', { clear = true }),
+      callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client == nil then
+          return
+        end
+        if client.name == 'ruff' then
+          -- Disable hover in favor of Pyright
+          client.server_capabilities.hoverProvider = false
+        end
+        if client.name == 'basedpyright' then
+          -- Disable diagnostics in favor of Ruff
+          client.server_capabilities.diagnosticProvider = false
+        end
       end,
+      desc = 'LSP: Disable hover capability from Ruff',
     })
 
     vim.lsp.enable({
@@ -159,7 +146,7 @@
       "dockerls",
       "docker_compose_language_service",
       "helm_ls",
-      "pyright",
+      "basedpyright",
       "ruff",
       "svelte",
       "julials",
@@ -167,31 +154,13 @@
 
     vim.g.rustaceanvim = {
       server = {
-        -- FIXME #27: no explicit capability table here. rustaceanvim resolves
-        -- vim.lsp.config('*') and deep-merges it over the server config, so the
-        -- blink.cmp completion support set on '*' above is injected automatically,
-        -- and rustaceanvim's own rust-specific defaults are preserved by that merge.
         on_attach = function(_, bufnr)
           vim.keymap.set("n", "<C-space>", function() vim.cmd.RustLsp({ "hover", "actions" }) end, { buffer = bufnr })
-          vim.keymap.set("n", "<Leader>a", function() vim.cmd.RustLsp("codeAction") end, { buffer = bufnr })
+          vim.keymap.set("n", "<Leader>ca", function() vim.cmd.RustLsp("codeAction") end, { buffer = bufnr })
         end,
       },
     }
 
-
-    -- lsp_signature is attached per-buffer in the LspAttach autocmd below
-    -- (FIXME #25), not via a one-shot global setup() at startup. on_attach binds
-    -- the signature-help handler to the specific buffer that just got an LSP
-    -- client, which is the plugin's documented integration point.
-
-    -- outline.nvim and nvim-autopairs setup moved into their lz.n
-    -- after-hooks below; vim.g.rustaceanvim is set here so rustaceanvim
-    -- picks it up on its own ft-triggered load.
-
-    -- Append our fenced-language mappings instead of clobbering whatever the
-    -- user / runtime already set (FIXME #26). vim.g.* can't be mutated in place,
-    -- so read the existing list, extend with any of ours not already present,
-    -- and write it back.
     do
       local fenced = vim.g.markdown_fenced_languages or {}
       local seen = {}
@@ -218,13 +187,12 @@
         vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
         vim.keymap.set("n", "<leader>cd", vim.diagnostic.open_float, opts)
         vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+        vim.keymap.set("n", "<leader>xv", function() 
+          local c = vim.diagnostic.config() or {}
+          local e = not c.virtual_lines
+          vim.diagnostic.config({ virtual_lines = e, virtual_text = false })
+        end)
       end,
     })
   '';
-
-  # Toggle between inline virtual text and full virtual_lines diagnostics,
-  # inlined as a `<cmd>lua ...<CR>` string rhs through the Nix mapping option.
-  vim.nnoremap = {
-    "<leader>xv" = "<cmd>lua local c = vim.diagnostic.config() or {}; local e = not c.virtual_lines; vim.diagnostic.config({ virtual_lines = e, virtual_text = not e })<CR>";
-  };
 }
