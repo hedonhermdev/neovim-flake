@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   vim.optPlugins = [
@@ -13,8 +18,16 @@
   vim.lazy = [
     {
       name = "conform.nvim";
-      event = [ "BufReadPost" "BufNewFile" ];
-      cmd = [ "ConformInfo" "FormatDisable" "FormatEnable" "FormatToggle" ];
+      event = [
+        "BufReadPost"
+        "BufNewFile"
+      ];
+      cmd = [
+        "ConformInfo"
+        "FormatDisable"
+        "FormatEnable"
+        "FormatToggle"
+      ];
       keys = [ "<leader>cf" ];
       after = ''
         local conform = require('conform')
@@ -42,7 +55,7 @@
             if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
               return
             end
-            return { timeout_ms = 1000, lsp_format = "fallback" }
+            return { timeout_ms = 500, lsp_format = "fallback" }
           end,
         })
 

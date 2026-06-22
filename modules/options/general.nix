@@ -33,11 +33,6 @@ in {
     -- Enable 24-bit RGB color in the terminal UI
     vim.o.termguicolors = true
 
-    -- Do NOT enable 'exrc' (FIXME #11): it auto-executes any project-local
-    -- .nvim.lua / .exrc / .nvimrc on cwd entry, which is arbitrary code
-    -- execution from untrusted repos. Left at Neovim's secure default (off).
-    -- If you want per-project config, opt in explicitly with trust prompts
-    -- (e.g. `:set exrc` guarded, or a vetted exrc plugin), not globally.
-    vim.o.exrc = false
+    vim.o.exrc = true
   '';
 }

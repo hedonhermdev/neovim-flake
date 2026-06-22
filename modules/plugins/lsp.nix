@@ -101,16 +101,16 @@
     })
 
     vim.lsp.config('basedpyright', {
+      handlers = {
+        -- Kill both diagnostic channels so basedpyright never renders diagnostics.
+        -- Push channel (server-initiated):
+        ["textDocument/publishDiagnostics"] = function() end,
+        -- Pull channel (client-requested):
+        ["textDocument/diagnostic"] = function() end,
+      },
       settings = {
         basedpyright = {
           disableOrganizeImports = true,
-          analysis = {
-            ignore = { '*' },
-            -- "off" is NOT a valid diagnosticMode (only "openFilesOnly" /
-            -- "workspace"); typeCheckingMode = "off" is the real off switch.
-            diagnosticMode = "openFilesOnly",
-            typeCheckingMode = "off",
-          },
         },
       },
     })
@@ -125,12 +125,8 @@
           return
         end
         if client.name == 'ruff' then
-          -- Disable hover in favor of Pyright
+          -- Disable hover in favor of basedpyright
           client.server_capabilities.hoverProvider = false
-        end
-        if client.name == 'basedpyright' then
-          -- Disable diagnostics in favor of Ruff
-          client.server_capabilities.diagnosticProvider = false
         end
       end,
       desc = 'LSP: Disable hover capability from Ruff',
@@ -146,8 +142,8 @@
       "dockerls",
       "docker_compose_language_service",
       "helm_ls",
-      "basedpyright",
       "ruff",
+      "ty",
       "svelte",
       "julials",
     })

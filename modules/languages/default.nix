@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (lib) mkOption mkEnableOption types;
@@ -20,20 +25,51 @@ let
       description = description;
     };
   };
-in {
+in
+{
   options.vim.languages = {
     # --- curated ON by default (light, widely used) ---
-    nix = mkLang { description = "Nix toolchain (nixd LSP)."; default = true; };
-    lua = mkLang { description = "Lua toolchain (stylua formatter)."; default = true; };
-    shell = mkLang { description = "Shell toolchain (bash LSP, shfmt, shellcheck)."; default = true; };
-    web = mkLang { description = "Web toolchain (prettier for js/ts/json/yaml/html/css/md)."; default = true; };
-    markdown = mkLang { description = "Markdown toolchain (markdownlint-cli)."; default = true; };
+    nix = mkLang {
+      description = "Nix toolchain (nixd LSP).";
+      default = true;
+    };
+    lua = mkLang {
+      description = "Lua toolchain (stylua formatter).";
+      default = true;
+    };
+    shell = mkLang {
+      description = "Shell toolchain (bash LSP, shfmt, shellcheck).";
+      default = true;
+    };
+    web = mkLang {
+      description = "Web toolchain (prettier for js/ts/json/yaml/html/css/md).";
+      default = true;
+    };
+    markdown = mkLang {
+      description = "Markdown toolchain (markdownlint-cli).";
+      default = true;
+    };
 
     # --- heavy / niche, OFF by default ---
-    python = mkLang { description = "Python toolchain (pyright, ruff, python3+debugpy). ~1.7 GiB."; default = false; };
-    latex = mkLang { description = "LaTeX toolchain (texlab)."; default = false; };
-    c = mkLang { description = "C/C++ toolchain (clang-tools). ~1.4 GiB."; default = false; };
-    docker = mkLang { description = "Docker toolchain (dockerfile-language-server, hadolint)."; default = false; };
-    rust = mkLang { description = "Rust formatter (rustfmt). rust-analyzer ships via rustaceanvim."; default = false; };
+    python = mkLang {
+      description = "Python toolchain (basedpyright, ruff, python3+debugpy). ~1.7 GiB.";
+      default = false;
+    };
+    latex = mkLang {
+      description = "LaTeX toolchain (texlab).";
+      default = false;
+    };
+    c = mkLang {
+      description = "C/C++ toolchain (clang-tools). ~1.4 GiB.";
+      default = false;
+    };
+    docker = mkLang {
+      description = "Docker toolchain (dockerfile-language-server, hadolint).";
+      default = false;
+    };
+    rust = mkLang {
+      description = "Rust formatter (rustfmt). rust-analyzer ships via rustaceanvim.";
+      default = false;
+    };
   };
 }
