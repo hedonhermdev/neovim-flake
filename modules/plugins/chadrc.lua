@@ -6,13 +6,13 @@
 -- rest fall through to nvconfig.
 return {
 	base46 = {
-		theme = "catppuccin",
+		theme = "solarized_light",
 		-- Themes cycled by the theme picker / toggle. base46's cache is writable
 		-- (Strategy 1, stdpath data), so switching recompiles on the fly.
 		-- Matches the pre-migration setup (catppuccin, macchiato). base46 ships a
 		-- single dark `catppuccin` variant (no per-flavour split) plus a light
 		-- `catppuccin-latte`.
-		theme_toggle = { "catppuccin", "catppuccin-latte" },
+		theme_toggle = { "solarized_light", "solarized_dark" },
 	},
 
 	ui = {
